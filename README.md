@@ -1,3 +1,42 @@
+# PersonaLive (Unofficial Blackwell/GB10 Support)
+
+> **⚠️ NOTE:** This is a modified fork of the original [PersonaLive by GVCLab](https://github.com/GVCLab/PersonaLive). All credit for the model architecture and core logic belongs to the original authors. This repository exists solely to provide patches and a launcher for **NVIDIA Blackwell (GB10)** and mixed-GPU setups (RTX 3090/4090).
+
+## 🚀 What's New in This Fork?
+* **Blackwell (GB10) Support:** Patched PyTorch and ONNX internals to prevent crashes on CUDA 13+ / GB10 hardware.
+* **Multi-GPU Launcher:** A new `launcher.py` that auto-detects GPUs and isolates processes (fixes crashes when mixing GB10s with RTX cards).
+* **Auto-Compilation:** Automatically compiles TensorRT engines for your specific GPU architecture on first launch.
+* **FP32/FP16 Auto-Casting:** Fixes `cuMemcpy` crashes caused by precision mismatches in the original inference pipeline.
+
+## 🛠 Installation for Blackwell & RTX Users
+
+### 1. Clone & Install
+```bash
+git clone [https://github.com/EvilTCell/PersonaLive-Blackwell.git](https://github.com/EvilTCell/PersonaLive-Blackwell.git)
+cd PersonaLive-Blackwell
+pip install -r requirements.txt
+```
+
+### 2. Download Weights
+You must download the model weights before running the software.
+```bash
+python tools/download_weights.py
+```
+*(Or follow the manual download links in the "Original README" section below).*
+
+### 3. Apply Hardware Patches
+This step is **mandatory** for GB10/Blackwell users to fix PyTorch/ONNX crashes.
+```bash
+python apply_patches.py
+```
+
+### 4. Launch
+Use the new interactive launcher. It handles engine compilation, GPU selection, and starting the web server.
+```bash
+python launcher.py
+```
+
+---
 <div align="center">
 
 <img src="assets/header.svg" alt="PersonaLive" width="100%">
@@ -30,11 +69,13 @@
 We present PersonaLive, a `real-time` and `streamable` diffusion framework capable of generating `infinite-length` portrait animations on a single `12GB GPU`.
 
 
-## 🚀 Getting Started
+## 🚀 Getting Started (Original Methods)
+> **Note:** For the updated installation method compatible with CUDA 13+, please see the top of this README. The instructions below are the original methods provided by the authors.
+
 ### 🛠 Installation
 ```
 # clone this repo
-git clone https://github.com/GVCLab/PersonaLive
+git clone [https://github.com/GVCLab/PersonaLive](https://github.com/GVCLab/PersonaLive)
 cd PersonaLive
 
 # Create conda environment
@@ -109,7 +150,7 @@ python inference_offline.py --use_xformers False
 #### 📦 Setup Web UI
 ```
 # install Node.js 18+
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+curl -o- [https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh](https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh) | bash
 nvm install 18
 
 cd webcam
