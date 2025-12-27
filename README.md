@@ -12,7 +12,7 @@
 
 ### 1. Clone & Install
 ```bash
-git clone [https://github.com/EvilTCell/PersonaLive-Blackwell.git](https://github.com/EvilTCell/PersonaLive-Blackwell.git)
+git clone https://github.com/EvilTCell/PersonaLive-Blackwell.git
 cd PersonaLive-Blackwell
 pip install -r requirements.txt
 ```
@@ -75,7 +75,7 @@ We present PersonaLive, a `real-time` and `streamable` diffusion framework capab
 ### 🛠 Installation
 ```
 # clone this repo
-git clone [https://github.com/GVCLab/PersonaLive](https://github.com/GVCLab/PersonaLive)
+git clone https://github.com/GVCLab/PersonaLive
 cd PersonaLive
 
 # Create conda environment
@@ -150,7 +150,7 @@ python inference_offline.py --use_xformers False
 #### 📦 Setup Web UI
 ```
 # install Node.js 18+
-curl -o- [https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh](https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh) | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 nvm install 18
 
 cd webcam
@@ -270,3 +270,4 @@ If you find PersonaLive useful for your research, welcome to cite our work using
 
 ## ❤️ Acknowledgement
 This code is mainly built upon [Moore-AnimateAnyone](https://github.com/MooreThreads/Moore-AnimateAnyone), [X-NeMo](https://byteaigc.github.io/X-Portrait2/), [StreamDiffusion](https://github.com/cumulo-autumn/StreamDiffusion), [RAIN](https://pscgylotti.github.io/pages/RAIN/) and [LivePortrait](https://github.com/KlingTeam/LivePortrait), thanks to their invaluable contributions.
+
