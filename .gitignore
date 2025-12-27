@@ -1,0 +1,19 @@
+# Ignore python cache and env
+__pycache__/
+*.pyc
+personalive_venv/
+venv/
+.env
+
+# Ignore massive model weights
+pretrained_weights/
+*.pth
+*.pt
+*.engine
+*.onnx
+*.bin
+*.safetensors
+
+# Ignore output results
+results/
+outputs/

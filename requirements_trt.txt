@@ -1,0 +1,8 @@
+onnx==1.17.0
+onnx_graphsurgeon==0.5.8
+#onnx_simplifier==0.4.36
+onnx_simplifier
+tensorrt==10.1.0
+onnxruntime==1.16.3
+colored==2.3.1
+pycuda==2024.1.2
