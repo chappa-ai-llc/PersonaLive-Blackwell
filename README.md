@@ -12,7 +12,7 @@
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/EvilTCell/PersonaLive-Blackwell.git
+git clone https://github.com/chappa-ai-llc/PersonaLive-Blackwell.git
 cd PersonaLive-Blackwell
 pip install -r requirements.txt
 ```
@@ -270,4 +270,5 @@ If you find PersonaLive useful for your research, welcome to cite our work using
 
 ## ❤️ Acknowledgement
 This code is mainly built upon [Moore-AnimateAnyone](https://github.com/MooreThreads/Moore-AnimateAnyone), [X-NeMo](https://byteaigc.github.io/X-Portrait2/), [StreamDiffusion](https://github.com/cumulo-autumn/StreamDiffusion), [RAIN](https://pscgylotti.github.io/pages/RAIN/) and [LivePortrait](https://github.com/KlingTeam/LivePortrait), thanks to their invaluable contributions.
+
 
