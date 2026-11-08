@@ -619,7 +619,7 @@
       "end": "2026-11-22",
       "pct": 80,
       "status": "active",
-      "note": "Board and MDD done. v0.1.0 tag waits on office signing (502, no release recipe): #6, forum b38eafb2."
+      "note": "Board and MDD done. v0.1.0 tag waits on office signing (502 after the payload is accepted; no release recipe): #6, forum b38eafb2."
     },
     {
       "id": "P1",
@@ -638,6 +638,15 @@
       "pct": 0,
       "status": "planned",
       "note": "Issues #2, #3, #4. Waits on A-01 (pod egress or Spark access)."
+    },
+    {
+      "id": "P3",
+      "label": "Webcam page on the shared style guide",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "#5, merge 1b45e68: five themes, light/dark, UI scale and type in Preferences, saved on the server; style-guide level 2 (conformance e704f71). Ships in the next tag."
     }
   ],
   "about": {
