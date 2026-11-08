@@ -5,7 +5,6 @@ from fastapi import WebSocket
 from starlette.websockets import WebSocketState
 import logging
 from types import SimpleNamespace
-from .vid2vid import Pipeline
 
 Connections = Dict[UUID, Dict[str, Union[WebSocket, asyncio.Queue]]]
 
@@ -94,7 +93,7 @@ class ConnectionManager:
                 return user_session["websocket"]
         return None
 
-    async def disconnect(self, user_id: UUID, pipeline: Pipeline = None):
+    async def disconnect(self, user_id: UUID, pipeline=None):
         print(f"[ConnectionManager] Disconnecting user: {user_id}")
         try:
             websocket = self.get_websocket(user_id)
@@ -110,7 +109,7 @@ class ConnectionManager:
             except Exception as e:
                 logging.error(f"Error: Exception while clearing data for {user_id}: {e}")
 
-    async def disconnect_all(self, pipeline: Pipeline = None):
+    async def disconnect_all(self, pipeline=None):
         """Disconnect all users and close pipeline"""
         print(f"[ConnectionManager] Disconnecting all {len(self.active_connections)} users...")
         user_ids = list(self.active_connections.keys())

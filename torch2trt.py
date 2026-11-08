@@ -40,13 +40,13 @@ sched_kwargs = OmegaConf.to_container(
 )
 
 pose_guider = PoseGuider().to(device=device, dtype=dtype)
-pose_guider_state_dict = torch.load(cfg.pose_guider_path, map_location="cpu")
+pose_guider_state_dict = torch.load(cfg.pose_guider_path, map_location="cpu", weights_only=True)
 pose_guider.load_state_dict(pose_guider_state_dict)
 del pose_guider_state_dict
 
 motion_encoder:MotEncoder = MotEncoder().to(dtype=dtype, device=device).eval()
 motion_encoder.set_attn_processor(AttnProcessor())
-motion_encoder_state_dict = torch.load(cfg.motion_encoder_path, map_location="cpu")
+motion_encoder_state_dict = torch.load(cfg.motion_encoder_path, map_location="cpu", weights_only=True)
 motion_encoder.load_state_dict(motion_encoder_state_dict)
 del motion_encoder_state_dict
 
@@ -58,12 +58,13 @@ denoising_unet:UNet3DConditionModel = UNet3DConditionModel.from_pretrained_2d(
 ).to(dtype=dtype, device=device)
 
 denoising_unet.load_state_dict(
-    torch.load(cfg.denoising_unet_path, map_location="cpu"), strict=False
+    torch.load(cfg.denoising_unet_path, map_location="cpu", weights_only=True), strict=False
 )
 denoising_unet.load_state_dict(
     torch.load(
         cfg.temporal_module_path,
         map_location="cpu",
+        weights_only=True,
     ),
     strict=False,
 )

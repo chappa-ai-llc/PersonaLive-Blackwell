@@ -2,11 +2,9 @@ import argparse
 import os
 import sys
 from datetime import datetime
-import mediapipe as mp
 import numpy as np
 import cv2
 import torch
-from skimage.transform import resize
 from diffusers import AutoencoderKLTemporalDecoder, AutoencoderKL, AutoencoderTiny
 from src.scheduler.scheduler_ddim import DDIMScheduler
 import random
@@ -17,8 +15,7 @@ from transformers import CLIPVisionModelWithProjection
 from src.models.unet_2d_condition import UNet2DConditionModel
 from src.models.unet_3d import UNet3DConditionModel
 from src.pipelines.pipeline_pose2vid import Pose2VideoPipeline, Pose2VideoPipeline_Stream
-from src.utils.util import save_videos_grid, crop_face
-from decord import VideoReader
+from src.utils.util import save_videos_grid, crop_face, read_video_frames
 from diffusers.utils.import_utils import is_xformers_available
 
 from src.models.motion_encoder.encoder import MotEncoder
@@ -35,7 +32,7 @@ def parse_args():
     parser.add_argument("-L", type=int, default=100)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", type=str, default="cuda")
-    parser.add_argument("--use_xformers", type=bool, default=True)
+    parser.add_argument("--use_xformers", action="store_true", help="use xformers attention (install a build that matches your PyTorch)")
     parser.add_argument("--stream_gen", type=bool, default=True, help='use streaming generation strategy to reduce VRAM usage.')
     parser.add_argument("--reference_image", type=str, default='', help='Path to reference image. If provided, overrides test_cases from config.')
     parser.add_argument("--driving_video", type=str, default='', help='Path to driving video. If provided, overrides test_cases from config.')
@@ -87,12 +84,13 @@ def main(args):
 
     # load pretrained weights
     denoising_unet.load_state_dict(
-        torch.load(config.denoising_unet_path, map_location="cpu"), strict=False
+        torch.load(config.denoising_unet_path, map_location="cpu", weights_only=True), strict=False
     )
     reference_unet.load_state_dict(
         torch.load(
             config.denoising_unet_path.replace('denoising_unet', 'reference_unet'),
             map_location="cpu",
+            weights_only=True,
         ),
         strict=True,
     )
@@ -100,6 +98,7 @@ def main(args):
         torch.load(
             config.denoising_unet_path.replace('denoising_unet', 'motion_encoder'),
             map_location="cpu",
+            weights_only=True,
         ),
         strict=True,
     )
@@ -107,6 +106,7 @@ def main(args):
         torch.load(
             config.denoising_unet_path.replace('denoising_unet', 'pose_guider'),
             map_location="cpu",
+            weights_only=True,
         ),
         strict=True,
     )
@@ -114,6 +114,7 @@ def main(args):
         torch.load(
             config.denoising_unet_path.replace('denoising_unet', 'temporal_module'),
             map_location="cpu",
+            weights_only=True,
         ),
         strict=False,
     )
@@ -121,6 +122,7 @@ def main(args):
         torch.load(
             config.denoising_unet_path.replace('denoising_unet', 'motion_extractor'),
             map_location="cpu",
+            weights_only=True,
         ),
         strict=False,
     )
@@ -134,9 +136,6 @@ def main(args):
                 print("Failed to enable xformers:", e)
         else:
             print("xformers is not available. Make sure it is installed correctly.")
-
-    mp_face_mesh = mp.solutions.face_mesh
-    face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1)
 
     if args.stream_gen:
         pipeline = Pose2VideoPipeline_Stream
@@ -188,19 +187,16 @@ def main(args):
                 continue
 
             if ref_image_path.endswith('.mp4'):
-                src_vid = VideoReader(ref_image_path)
-                ref_img = src_vid[0].asnumpy()
-                ref_img = Image.fromarray(ref_img).convert("RGB")
+                ref_img = Image.fromarray(read_video_frames(ref_image_path, limit=1)[0])
             else:
                 ref_img = Image.open(ref_image_path).convert("RGB")
 
-            control = VideoReader(pose_video_path)
+            control = read_video_frames(pose_video_path)
             video_length = min(len(control) // 4 * 4, args.L)
-            sel_idx = range(len(control))[:video_length]
-            control = control.get_batch([sel_idx]).asnumpy() # N, H, W, C
+            control = np.stack(control[:video_length])  # N, H, W, C
 
             ref_image_pil = ref_img.copy()
-            ref_patch = crop_face(ref_image_pil, face_mesh)
+            ref_patch = crop_face(ref_image_pil, pose_encoder)
             ref_face_pil = Image.fromarray(ref_patch).convert("RGB")
 
             size = args.H
@@ -212,7 +208,7 @@ def main(args):
             for idx_control, pose_image_pil in tqdm(enumerate(control[:video_length]), total=video_length, desc='cropping faces'):
                 pose_image_pil = Image.fromarray(pose_image_pil).convert("RGB")
                 ori_pose_images.append(pose_image_pil)
-                dri_face = crop_face(pose_image_pil, face_mesh)
+                dri_face = crop_face(pose_image_pil, pose_encoder)
                 dri_face_pil = Image.fromarray(dri_face).convert("RGB")
                 dri_faces.append(dri_face_pil)
 
