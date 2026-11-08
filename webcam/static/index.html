@@ -1,18 +1,37 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-preset="modernist">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PersonaLive</title>
   <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="style/themes.css">
   <link rel="stylesheet" href="app.css">
+  <script src="appearance.js"></script>
+  <script src="preferences.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>PersonaLive</h1>
-    <p class="sub">Live portrait animation, running on your own GPU.
-      Model by <a href="https://github.com/GVCLab/PersonaLive" target="_blank" rel="noopener noreferrer">GVCLab</a>.</p>
+  <header class="top">
+    <div>
+      <h1>PersonaLive</h1>
+      <p class="sub">Live portrait animation, running on your own GPU.
+        Model by <a href="https://github.com/GVCLab/PersonaLive" target="_blank" rel="noopener noreferrer">GVCLab</a>.</p>
+    </div>
+    <div class="profile" hidden id="profile">
+      <button id="avatar" type="button" class="avatar" aria-haspopup="menu" aria-expanded="false"
+        aria-controls="profileMenu" aria-label="Profile menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="9" r="4"/><path d="M4 21c1.5-4.5 4.5-6 8-6s6.5 1.5 8 6"/></svg>
+      </button>
+      <div id="profileMenu" class="menu" role="menu" aria-label="Profile" hidden>
+        <div class="menu-head">
+          <strong>Signed in</strong>
+          <span>with this server's access key</span>
+        </div>
+        <button type="button" role="menuitem" id="openPrefs" tabindex="-1">Preferences</button>
+        <button type="button" role="menuitem" id="signOut" tabindex="-1">Sign out</button>
+      </div>
+    </div>
   </header>
 
   <main>
@@ -64,6 +83,45 @@
     </div>
   </main>
 
+  <dialog id="prefs" class="prefs" aria-labelledby="prefsTitle">
+    <h2 id="prefsTitle" tabindex="-1">Preferences</h2>
+    <fieldset>
+      <legend>Theme</legend>
+      <div id="themeCards" class="theme-cards"></div>
+      <p id="themeAuto" class="hint"></p>
+    </fieldset>
+    <fieldset>
+      <legend>Light or dark</legend>
+      <div class="seg" id="modeGroup">
+        <label><input type="radio" name="mode" value="system"> System</label>
+        <label><input type="radio" name="mode" value="light"> Light</label>
+        <label><input type="radio" name="mode" value="dark"> Dark</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Size and type</legend>
+      <div class="type-grid">
+        <label for="scale">UI scale</label>
+        <select id="scale"></select>
+        <label for="typeHead">Heading font</label>
+        <select id="typeHead"></select>
+        <label for="typeBody">Body font</label>
+        <select id="typeBody"></select>
+        <label for="typeText">Text size</label>
+        <select id="typeText"></select>
+        <label for="typeHeading">Heading size</label>
+        <select id="typeHeading"></select>
+        <label for="typeLabel">Label size</label>
+        <select id="typeLabel"></select>
+      </div>
+    </fieldset>
+    <footer>
+      <p id="prefsStatus" role="status" aria-live="polite">Changes apply at once and are saved on this server.</p>
+      <button type="button" id="closePrefs">Close</button>
+    </footer>
+  </dialog>
+
+  <span id="themeProbe" class="preset-preview" hidden></span>
   <canvas id="work" width="512" height="512" hidden></canvas>
 </body>
 </html>

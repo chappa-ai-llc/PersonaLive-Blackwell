@@ -57,6 +57,7 @@ Use `--acceleration none` for plain PyTorch attention (no engine needed).
 | `--access-key-file` | `PERSONALIVE_ACCESS_KEY_FILE` | none | File with the access key (at least 32 characters, mode 600). Without it, a new key is made for each run and printed with the address. |
 | `--ssl-certfile`, `--ssl-keyfile` | `SSL_CERTFILE`, `SSL_KEYFILE` | none | TLS certificate chain and private key (PEM). |
 | `--max-queue-size` | `MAX_QUEUE_SIZE` | `1` | Most browser sessions at once. |
+| `--prefs-file` | `PERSONALIVE_PREFS_FILE` | `personalive/preferences.json` in `~/.config` (Linux) or `%APPDATA%` (Windows) | Where the page's appearance is saved (below). |
 | `--acceleration` | `ACCELERATION` | `none` | `none`, `tensorrt`, or `xformers` (only with an xFormers build that matches your PyTorch; none is installed). |
 
 **From another machine.** Browsers allow the camera only on `https://` pages or on `localhost`, so remote use needs TLS, and the server refuses to listen on another address without it. Use a certificate your browser trusts (for example one from your own CA), keep its key file readable by you only, and keep the access key in a file:
@@ -68,6 +69,8 @@ python inference_online.py --host 0.0.0.0 --ssl-certfile cert.pem --ssl-keyfile 
 ```
 
 Then open `https://<this machine>:7860/` and enter the key.
+
+**Appearance.** The round button in the upper right of the page opens a menu with **Preferences** and **Sign out**. Preferences sets the theme (Automatic, Modernist, Flight manual, Aurora, Ember or High contrast), light or dark, the UI scale (80% to 200%), and the fonts and type sizes. A choice applies at once and is saved on the server, in the `--prefs-file` file, so it follows you to another browser. **Automatic** uses High contrast when your system asks for more contrast, and Modernist otherwise. The themes and fonts come from the shared chappa.ai style guide and are served by this server: the page loads nothing from other sites.
 
 ## Offline inference
 
@@ -97,10 +100,13 @@ TensorRT can roughly double the speed. Building the engine takes about 20 minute
 
 ```bash
 python -m unittest discover -s tests -v
+python tools/check_style.py --style-guide ../style-guide
 python tools/smoke_random_weights.py scratchpad/smoke
 ```
 
-The first runs the webcam server's security tests; the second runs the whole online pipeline on CPU with random weights (a few minutes, about 8 GB of disk). After changing a dependency in `pyproject.toml`, regenerate the lock with `tools/lock.sh` and run both.
+The first runs the webcam server's tests (security, and the appearance preference). The second checks the page's vendored themes and fonts against their SHA-256 list and runs the style guide's contrast audit on each theme; it needs a clone of `chappa-ai-llc/style-guide` (or `--integrity-only`). The third runs the whole online pipeline on CPU with random weights (a few minutes, about 8 GB of disk). After changing a dependency in `pyproject.toml`, regenerate the lock with `tools/lock.sh` and run all three.
+
+To take a newer version of the themes and fonts, run `python tools/sg.py vendor --out <this repo>/webcam/static/style --type modernist flight-manual aurora ember high-contrast` from the style guide, then `tools/check_style.py`. Never edit the files in `webcam/static/style/` by hand: the check fails.
 
 ---
 

@@ -46,6 +46,7 @@ async function api(path, options = {}) {
 // ---- Sign-in -------------------------------------------------------------
 
 function showSignin() {
+  window.Preferences.signedOut();
   $("app").hidden = true;
   $("signin").hidden = false;
   $("key").focus();
@@ -80,6 +81,7 @@ async function start() {
     }
     $("signin").hidden = true;
     $("app").hidden = false;
+    window.Preferences.load();
   } catch (e) {
     if ($("signin").hidden) warn(e.message);
   }
@@ -93,6 +95,15 @@ $("signin").addEventListener("submit", async (ev) => {
     warn("");
     await start();
   }
+});
+
+$("signOut").addEventListener("click", async () => {
+  if (state.running) stopAnimation();
+  if (state.ws) state.ws.close();
+  try {
+    await fetch("/api/logout", { method: "POST", credentials: "same-origin" });
+  } catch (_) { /* the session ends on the server after its lifetime anyway */ }
+  showSignin();
 });
 
 // ---- Reference portrait --------------------------------------------------
