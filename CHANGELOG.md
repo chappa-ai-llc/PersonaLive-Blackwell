@@ -5,6 +5,8 @@ All notable changes to this fork. Format: [Keep a Changelog](https://keepachange
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-08
+
 **Config changes:** none needed. The new `--prefs-file` option (`PERSONALIVE_PREFS_FILE`) has a default:
 `personalive/preferences.json` under `~/.config` on Linux or `%APPDATA%` on Windows.
 

@@ -1,8 +1,8 @@
 # PersonaLive-Blackwell — Master Design Document
-**Version:** 1.1.1
+**Version:** 1.1.2
 **Status:** Active
 **Owner:** chappa.ai LLC
-**As of:** 2026-11-08, code release 0.1.0 plus Unreleased
+**As of:** 2026-11-08, code release 0.2.0
 
 ## --help
 **Document Type:** Master Design Document
@@ -182,7 +182,7 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 - §11.2.c Every `torch.load` uses `weights_only=True`. Every new download is pinned and hash-checked.
 - §11.2.d The page stays plain HTML, CSS and JavaScript: no npm, no CDN, no inline script (the CSP forbids it).
 - §11.2.e `webcam/security.py` stays free of GPU and model imports, so it can be tested anywhere.
-- §11.2.f The pod has no GPU and no Hugging Face or `pypi.nvidia.com` egress. Rebuild the CPU venv on `/scratch` (it is lost on restart) with `uv venv -p 3.12`, then install `requirements.txt` without `tensorrt*` and `pycuda`, with `--require-hashes`, run from outside `/work`.
+- §11.2.f The pod has no GPU and no Hugging Face or `pypi.nvidia.com` egress. Rebuild the CPU venv on `/scratch` (it is lost on restart) with `uv venv -p 3.12` (or `python3 -m venv` when `uv` is missing), then install `requirements.txt` without `tensorrt*` and `pycuda`, with `--require-hashes`, run from outside `/work`. `/scratch` is an 8 GB tmpfs: the venv takes about 6 GB, so point pip's temp folder at NFS (`TMPDIR=/work/scratchpad/piptmp`, plus `--no-cache-dir`), or the install runs out of space.
 
 §11.3 **Role map.** Server or page work: §5, §7. Model or pipeline work: §2, §4. Dependency work: §6.3, §8.4, §9. Release work: §8.3.
 
@@ -192,6 +192,7 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 
 | Version | Date | Change |
 |---|---|---|
+| 1.1.2 | 2026-11-08 | §11.2.f: the venv rebuild when `uv` is missing, and pip's temp folder off the 8 GB `/scratch`. |
 | 1.1.1 | 2026-11-08 | §11.2.a: the repo being public is the owner's decision (D-01). |
 | 1.1.0 | 2026-11-08 | Appearance (#5): `webcam/preferences.py`, the preference API (§5.1, §6.4), vendored style files, `tools/check_style.py` (§9.4), `font-src 'self'`, §8.2 corrected (the server now writes one file outside the repo). |
 | 1.0.0 | 2026-11-08 | First MDD, written from the README, SECURITY.md and the code at 0.1.0. Replaces `docs/build-kickoff.md`. |
