@@ -48,3 +48,4 @@ older checkout: it overwrites installed PyTorch files.
 - `tools/smoke_random_weights.py`: runs the whole online pipeline on CPU with random weights, to check a dependency
   upgrade without a GPU or the real weights.
 - `SECURITY.md`.
+- `docs/MDD-personalive-blackwell.md`, the design document (replaces the office kick-off brief).

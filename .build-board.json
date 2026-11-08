@@ -1,7 +1,8 @@
 {
   "docs": [
-    "docs/build-kickoff.md"
+    "docs/MDD-personalive-blackwell.md",
+    "SECURITY.md",
+    "CHANGELOG.md"
   ],
-  "kickoff": "docs/build-kickoff.md",
   "project": "personalive-blackwell"
 }
