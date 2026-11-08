@@ -584,10 +584,10 @@
       "id": "P0",
       "label": "Onboard: MDD, board and first release",
       "start": "2026-11-08",
-      "end": "2026-11-08",
-      "pct": 100,
-      "status": "done",
-      "note": "Board and MDD done. v0.1.0 and v0.2.0 tagged and signed by the office (0.170.0 fixed the signing route), #6, forum b38eafb2."
+      "end": "2026-11-22",
+      "pct": 90,
+      "status": "active",
+      "note": "v0.1.0 and v0.2.0 are tagged, signed by the office and pushed (office 0.170.0 fixed the signing route). Still to do: the GitHub release pages for both tags, #6."
     },
     {
       "id": "P1",
