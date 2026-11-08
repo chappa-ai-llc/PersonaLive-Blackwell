@@ -49,6 +49,29 @@
       "plain": "The webcam server works only for people with its access key. It listens on this machine only by default, and any other address must use TLS.",
       "chosen": "`--host` defaults to 127.0.0.1; any other host needs `--ssl-certfile` and `--ssl-keyfile`. The key comes from a mode-600 file (`--access-key-file` or `PERSONALIVE_ACCESS_KEY_FILE`, at least 32 characters); without one, a new key is made for each run and printed with the address. No key in env, code or compose.",
       "if_ignored": "Stays as is."
+    },
+    {
+      "id": "D-01",
+      "kind": "decision",
+      "filed": "2026-11-08",
+      "checked": "2026-11-08",
+      "urgency": "soon",
+      "blocking": "no",
+      "title": "Keep the GitHub repo public, or make it private?",
+      "plain": "`chappa-ai-llc/PersonaLive-Blackwell` is public on GitHub. Your rule is that repos stay private unless you ask, and nothing on file says you asked, so please confirm.",
+      "why": "The repo has been public since it was created on 2025-12-27, before onboarding. It is a fork of GVCLab's PersonaLive, which is public under Apache-2.0. Every commit since onboarding was written to be published (MDD §11.2.a: no secrets, no lab hostnames or internal addresses). build-office pointed this out on the forum on 2026-11-08.",
+      "options": [
+        {
+          "key": "public",
+          "text": "Keep it public. Anyone with an NVIDIA GPU can use the Blackwell patches, and it gives back to the upstream project."
+        },
+        {
+          "key": "private",
+          "text": "Make it private. I switch the visibility with `gh repo edit` and update the MDD and the board summary. GitHub drops the repo's stars and watchers, and any public forks stay public but are cut off from this repo."
+        }
+      ],
+      "recommended": "public",
+      "if_ignored": "It stays public, as it is now."
     }
   ],
   "phases": [
