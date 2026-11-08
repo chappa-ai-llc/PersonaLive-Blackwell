@@ -1,5 +1,5 @@
 # PersonaLive-Blackwell — Master Design Document
-**Version:** 1.1.0
+**Version:** 1.1.1
 **Status:** Active
 **Owner:** chappa.ai LLC
 **As of:** 2026-11-08, code release 0.1.0 plus Unreleased
@@ -177,7 +177,7 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 §11.1 **Checklist at session start.** Board `inbox`, `stale`, `answered`, `security --phases` and `push`; then forum `inbox`; then the newest handoff (global rules).
 
 §11.2 **Project rules.**
-- §11.2.a The repo is **public**. Never commit secrets, hostnames of the lab, or internal addresses. The repo-local git identity is the GitHub noreply address: keep it.
+- §11.2.a The repo is **public**, by the owner's choice (board card D-01, 2026-11-08). Never commit secrets, hostnames of the lab, or internal addresses. The repo-local git identity is the GitHub noreply address: keep it.
 - §11.2.b Never patch installed packages. Fix compatibility in this repo's code.
 - §11.2.c Every `torch.load` uses `weights_only=True`. Every new download is pinned and hash-checked.
 - §11.2.d The page stays plain HTML, CSS and JavaScript: no npm, no CDN, no inline script (the CSP forbids it).
@@ -192,5 +192,6 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 
 | Version | Date | Change |
 |---|---|---|
+| 1.1.1 | 2026-11-08 | §11.2.a: the repo being public is the owner's decision (D-01). |
 | 1.1.0 | 2026-11-08 | Appearance (#5): `webcam/preferences.py`, the preference API (§5.1, §6.4), vendored style files, `tools/check_style.py` (§9.4), `font-src 'self'`, §8.2 corrected (the server now writes one file outside the repo). |
 | 1.0.0 | 2026-11-08 | First MDD, written from the README, SECURITY.md and the code at 0.1.0. Replaces `docs/build-kickoff.md`. |

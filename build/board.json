@@ -17,323 +17,9 @@
       ],
       "verify": "After the resume I run `python tools/download_weights.py --pin`, and `tools/weights.lock.json` gets real hashes (#2 closes).",
       "blocks": "#2 weight pins, #3 TensorRT lock"
-    },
-    {
-      "id": "X-01",
-      "kind": "decided",
-      "filed": "2026-11-08",
-      "checked": "2026-11-08",
-      "title": "No Go rewrite: stays Python",
-      "plain": "The project stays in Python, because its core (PyTorch, TensorRT, diffusers) has no Go equivalent; the security problems were outdated dependencies, now fixed.",
-      "chosen": "Python with a full hash lock (`requirements.txt`, made by `tools/lock.sh`), Dependabot on, dep-audit in the office. A local dep-audit of 0.1.0 found 0 advisories in 90 dependencies.",
-      "if_ignored": "Stays as is."
-    },
-    {
-      "id": "X-02",
-      "kind": "decided",
-      "filed": "2026-11-08",
-      "checked": "2026-11-08",
-      "title": "The webcam page is a local tool, not an admin dashboard",
-      "plain": "The webcam page runs on your own machine, like a desktop app. So it gets no security self-check page and no BUILD link; the server itself is locked down instead.",
-      "why": "The self-check and BUILD-link rules cover web admin dashboards. This page has no accounts, settings or admin, only one live animation session.",
-      "chosen": "Server hardening, described in `SECURITY.md`: access key, 127.0.0.1 by default, TLS needed for any other address, strict CSP and security headers, Origin check, one session at a time, size-checked image decode.",
-      "if_ignored": "Stays as is. Overturn this if you want the self-check page anyway."
-    },
-    {
-      "id": "X-03",
-      "kind": "decided",
-      "filed": "2026-11-08",
-      "checked": "2026-11-08",
-      "title": "The webcam server always needs an access key",
-      "plain": "The webcam server works only for people with its access key. It listens on this machine only by default, and any other address must use TLS.",
-      "chosen": "`--host` defaults to 127.0.0.1; any other host needs `--ssl-certfile` and `--ssl-keyfile`. The key comes from a mode-600 file (`--access-key-file` or `PERSONALIVE_ACCESS_KEY_FILE`, at least 32 characters); without one, a new key is made for each run and printed with the address. No key in env, code or compose.",
-      "if_ignored": "Stays as is."
-    },
-    {
-      "id": "D-01",
-      "kind": "decision",
-      "filed": "2026-11-08",
-      "checked": "2026-11-08",
-      "urgency": "soon",
-      "blocking": "no",
-      "title": "Keep the GitHub repo public, or make it private?",
-      "plain": "`chappa-ai-llc/PersonaLive-Blackwell` is public on GitHub. Your rule is that repos stay private unless you ask, and nothing on file says you asked, so please confirm.",
-      "why": "The repo has been public since it was created on 2025-12-27, before onboarding. It is a fork of GVCLab's PersonaLive, which is public under Apache-2.0. Every commit since onboarding was written to be published (MDD §11.2.a: no secrets, no lab hostnames or internal addresses). build-office pointed this out on the forum on 2026-11-08.",
-      "options": [
-        {
-          "key": "public",
-          "text": "Keep it public. Anyone with an NVIDIA GPU can use the Blackwell patches, and it gives back to the upstream project."
-        },
-        {
-          "key": "private",
-          "text": "Make it private. I switch the visibility with `gh repo edit` and update the MDD and the board summary. GitHub drops the repo's stars and watchers, and any public forks stay public but are cut off from this repo."
-        }
-      ],
-      "recommended": "public",
-      "if_ignored": "It stays public, as it is now."
     }
   ],
   "phases": [
-    {
-      "id": "SEC-brace-expansion-f4f254",
-      "group": "Security",
-      "label": "Fix high: brace-expansion in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "2 advisories: GHSA-q2hr-2g5m-vwhr, GHSA-3jxr-9vmj-r5cp. Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-braces-a9f09a",
-      "group": "Security",
-      "label": "Fix high: braces in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-grv7-fg5c-xmjg. Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-browserslist-139ca1",
-      "group": "Security",
-      "label": "Fix high: browserslist in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-73wf-gq98-2v4g. Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-devalue-f3e8f6",
-      "group": "Security",
-      "label": "Fix high: devalue in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "8 advisories: GHSA-r9w8-h9r3-54w4, GHSA-hx4r-w6wj-j8fg, GHSA-wf3x-273g-mvxv, GHSA-4q55-j62x-fr9h, GHSA-mwv9-gp5h-frr4, GHSA-cfw5-2vxh-hr84 (+2). Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-flatted-441169",
-      "group": "Security",
-      "label": "Fix high: flatted in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-rf6f-7fwh-wjgh. Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-js-yaml-81ffcd",
-      "group": "Security",
-      "label": "Fix high: js-yaml in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "5 advisories: GHSA-2883-xcg3-v3hh, GHSA-5p4m-2wfm-xmqj, GHSA-52cp-r559-cp3m, GHSA-h67p-54hq-rp68, GHSA-mh29-5h37-fv8m. Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-minimatch-e4b282",
-      "group": "Security",
-      "label": "Fix high: minimatch in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-7r86-cg39-jmmj. Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-nanoid-1e1252",
-      "group": "Security",
-      "label": "Fix high: nanoid in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-xwg4-73v4-xw9w. Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-postcss-b7f2ef",
-      "group": "Security",
-      "label": "Fix high: postcss in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "4 advisories: GHSA-fxqj-rqcc-2cmp, GHSA-r28c-9q8g-f849, GHSA-6g55-p6wh-862q, GHSA-qx2v-qp2m-jg93. Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-rollup-ac0994",
-      "group": "Security",
-      "label": "Fix high: rollup in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "2 advisories: GHSA-mw96-cpmx-2vgc, GHSA-gcx4-mw62-g8wm. Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-source-map-js-cbc1a1",
-      "group": "Security",
-      "label": "Fix high: source-map-js in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-68fv-2mgg-jv7q. Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-undici-f5246d",
-      "group": "Security",
-      "label": "Fix high: undici in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "17 advisories: GHSA-2m5v-pch6-74hx, GHSA-qrxm-fqhp-jwvm, GHSA-9fm3-97px-rjf6, GHSA-r53p-7pc4-xj5r, GHSA-m8rv-5g2x-5cg5, GHSA-v3r7-h72x-cjcm (+11). Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-vite-18556a",
-      "group": "Security",
-      "label": "Fix high: vite in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-11-15",
-      "pct": 0,
-      "status": "active",
-      "note": "22 advisories: GHSA-9jrq-w75r-8gcw, GHSA-rq7h-c2jc-7f22, GHSA-r825-w8mm-5pxw, GHSA-587h-7wmj-h5pm, GHSA-698v-4r3x-3vcv, GHSA-v6wh-96g9-6wx3 (+16). Due 2026-11-15 (high: 7 days from first tracked)."
-    },
-    {
-      "id": "SEC-accelerate-01d3f9",
-      "group": "Security",
-      "label": "Fix medium: accelerate in requirements.txt",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-4j2p-28q2-5m79. Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-python-dotenv-87579f",
-      "group": "Security",
-      "label": "Fix medium: python-dotenv in requirements.txt",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-mf9w-mj56-hr94. Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-transformers-baa1af",
-      "group": "Security",
-      "label": "Fix medium: transformers in requirements.txt",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-69w3-r845-3855. Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-accelerate-f87e37",
-      "group": "Security",
-      "label": "Fix medium: accelerate in requirements_base.txt",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-4j2p-28q2-5m79. Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-transformers-f4ebae",
-      "group": "Security",
-      "label": "Fix medium: transformers in requirements_base.txt",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-69w3-r845-3855. Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-fastify-busboy-3dc672",
-      "group": "Security",
-      "label": "Fix medium: @fastify/busboy in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-gxm5-99cw-xjw9. Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-sveltejs-kit-a8fe77",
-      "group": "Security",
-      "label": "Fix medium: @sveltejs/kit in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "5 advisories: GHSA-pfhg-q3qv-9q6r, GHSA-27mw-82g8-phjj, GHSA-866w-xmhq-wj7x, GHSA-rjjv-87mx-6x3h, GHSA-mh2x-fcqh-fmqv. Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-esbuild-9fa9fd",
-      "group": "Security",
-      "label": "Fix medium: esbuild in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-67mh-4wv8-2f99. Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-picomatch-f11bb5",
-      "group": "Security",
-      "label": "Fix medium: picomatch in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-3v7f-55p6-f55p. Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-postcss-selector-parser-62639a",
-      "group": "Security",
-      "label": "Fix medium: postcss-selector-parser in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-rj75-hqrm-r3gf. Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-svelte-82fe9a",
-      "group": "Security",
-      "label": "Fix medium: svelte in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2026-12-08",
-      "pct": 0,
-      "status": "active",
-      "note": "7 advisories: GHSA-rcqx-6q8c-2c42, GHSA-pr6f-5x2q-rwfp, GHSA-phwv-c562-gvmh, GHSA-crpf-4hrx-3jrp, GHSA-m56q-vw4c-c2cp, GHSA-f7gr-6p89-r883 (+1). Due 2026-12-08 (medium: 30 days from first tracked)."
-    },
-    {
-      "id": "SEC-cookie-f5fc84",
-      "group": "Security",
-      "label": "Fix low: cookie in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2027-02-06",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-pxg6-pf52-xh8x. Due 2027-02-06 (low: 90 days from first tracked)."
-    },
-    {
-      "id": "SEC-deepmerge-7eff39",
-      "group": "Security",
-      "label": "Fix low: deepmerge in webcam/frontend/package-lock.json",
-      "start": "2026-11-08",
-      "end": "2027-02-06",
-      "pct": 0,
-      "status": "active",
-      "note": "1 advisory: GHSA-gcqx-w48m-w2h4. Due 2027-02-06 (low: 90 days from first tracked)."
-    },
     {
       "id": "SEC-unmaintained-colorama-bd13d8",
       "group": "Security",
@@ -363,6 +49,266 @@
       "pct": 0,
       "status": "active",
       "note": "Maintenance, not an advisory: no release since 2023-10-24 (newest 1.5.4), over 3 years. Replace it, or record an exception `unmaintained:shellingham`. Due 2027-02-06 (90 days from first tracked)."
+    },
+    {
+      "id": "SEC-brace-expansion-f4f254",
+      "group": "Security",
+      "label": "Fixed: brace-expansion in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 2 advisories: GHSA-q2hr-2g5m-vwhr, GHSA-3jxr-9vmj-r5cp. Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-braces-a9f09a",
+      "group": "Security",
+      "label": "Fixed: braces in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-grv7-fg5c-xmjg. Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-browserslist-139ca1",
+      "group": "Security",
+      "label": "Fixed: browserslist in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-73wf-gq98-2v4g. Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-devalue-f3e8f6",
+      "group": "Security",
+      "label": "Fixed: devalue in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 8 advisories: GHSA-r9w8-h9r3-54w4, GHSA-hx4r-w6wj-j8fg, GHSA-wf3x-273g-mvxv, GHSA-4q55-j62x-fr9h, GHSA-mwv9-gp5h-frr4, GHSA-cfw5-2vxh-hr84 (+2). Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-flatted-441169",
+      "group": "Security",
+      "label": "Fixed: flatted in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-rf6f-7fwh-wjgh. Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-js-yaml-81ffcd",
+      "group": "Security",
+      "label": "Fixed: js-yaml in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 5 advisories: GHSA-2883-xcg3-v3hh, GHSA-5p4m-2wfm-xmqj, GHSA-52cp-r559-cp3m, GHSA-h67p-54hq-rp68, GHSA-mh29-5h37-fv8m. Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-minimatch-e4b282",
+      "group": "Security",
+      "label": "Fixed: minimatch in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-7r86-cg39-jmmj. Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-nanoid-1e1252",
+      "group": "Security",
+      "label": "Fixed: nanoid in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-xwg4-73v4-xw9w. Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-postcss-b7f2ef",
+      "group": "Security",
+      "label": "Fixed: postcss in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 4 advisories: GHSA-fxqj-rqcc-2cmp, GHSA-r28c-9q8g-f849, GHSA-6g55-p6wh-862q, GHSA-qx2v-qp2m-jg93. Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-rollup-ac0994",
+      "group": "Security",
+      "label": "Fixed: rollup in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 2 advisories: GHSA-mw96-cpmx-2vgc, GHSA-gcx4-mw62-g8wm. Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-source-map-js-cbc1a1",
+      "group": "Security",
+      "label": "Fixed: source-map-js in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-68fv-2mgg-jv7q. Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-undici-f5246d",
+      "group": "Security",
+      "label": "Fixed: undici in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 17 advisories: GHSA-2m5v-pch6-74hx, GHSA-qrxm-fqhp-jwvm, GHSA-9fm3-97px-rjf6, GHSA-r53p-7pc4-xj5r, GHSA-m8rv-5g2x-5cg5, GHSA-v3r7-h72x-cjcm (+11). Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-vite-18556a",
+      "group": "Security",
+      "label": "Fixed: vite in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 22 advisories: GHSA-9jrq-w75r-8gcw, GHSA-rq7h-c2jc-7f22, GHSA-r825-w8mm-5pxw, GHSA-587h-7wmj-h5pm, GHSA-698v-4r3x-3vcv, GHSA-v6wh-96g9-6wx3 (+16). Due 2026-11-15 (high: 7 days from first tracked)."
+    },
+    {
+      "id": "SEC-accelerate-01d3f9",
+      "group": "Security",
+      "label": "Fixed: accelerate in requirements.txt",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-4j2p-28q2-5m79. Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-python-dotenv-87579f",
+      "group": "Security",
+      "label": "Fixed: python-dotenv in requirements.txt",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-mf9w-mj56-hr94. Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-transformers-baa1af",
+      "group": "Security",
+      "label": "Fixed: transformers in requirements.txt",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-69w3-r845-3855. Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-accelerate-f87e37",
+      "group": "Security",
+      "label": "Fixed: accelerate in requirements_base.txt",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-4j2p-28q2-5m79. Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-transformers-f4ebae",
+      "group": "Security",
+      "label": "Fixed: transformers in requirements_base.txt",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-69w3-r845-3855. Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-fastify-busboy-3dc672",
+      "group": "Security",
+      "label": "Fixed: @fastify/busboy in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-gxm5-99cw-xjw9. Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-sveltejs-kit-a8fe77",
+      "group": "Security",
+      "label": "Fixed: @sveltejs/kit in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 5 advisories: GHSA-pfhg-q3qv-9q6r, GHSA-27mw-82g8-phjj, GHSA-866w-xmhq-wj7x, GHSA-rjjv-87mx-6x3h, GHSA-mh2x-fcqh-fmqv. Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-esbuild-9fa9fd",
+      "group": "Security",
+      "label": "Fixed: esbuild in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-67mh-4wv8-2f99. Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-picomatch-f11bb5",
+      "group": "Security",
+      "label": "Fixed: picomatch in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-3v7f-55p6-f55p. Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-postcss-selector-parser-62639a",
+      "group": "Security",
+      "label": "Fixed: postcss-selector-parser in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-rj75-hqrm-r3gf. Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-svelte-82fe9a",
+      "group": "Security",
+      "label": "Fixed: svelte in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 7 advisories: GHSA-rcqx-6q8c-2c42, GHSA-pr6f-5x2q-rwfp, GHSA-phwv-c562-gvmh, GHSA-crpf-4hrx-3jrp, GHSA-m56q-vw4c-c2cp, GHSA-f7gr-6p89-r883 (+1). Due 2026-12-08 (medium: 30 days from first tracked)."
+    },
+    {
+      "id": "SEC-cookie-f5fc84",
+      "group": "Security",
+      "label": "Fixed: cookie in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-pxg6-pf52-xh8x. Due 2027-02-06 (low: 90 days from first tracked)."
+    },
+    {
+      "id": "SEC-deepmerge-7eff39",
+      "group": "Security",
+      "label": "Fixed: deepmerge in webcam/frontend/package-lock.json",
+      "start": "2026-11-08",
+      "end": "2026-11-08",
+      "pct": 100,
+      "status": "done",
+      "note": "Gone from the report on 2026-11-08. 1 advisory: GHSA-gcqx-w48m-w2h4. Due 2027-02-06 (low: 90 days from first tracked)."
     },
     {
       "id": "SEC-anyio-21588c",
