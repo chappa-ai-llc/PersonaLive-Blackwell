@@ -54,17 +54,17 @@ class PersonaLive:
 
         # initialize models
         self.pose_guider = PoseGuider().to(device=self.device, dtype=self.dtype)
-        pose_guider_state_dict = torch.load(cfg.pose_guider_path, map_location="cpu")
+        pose_guider_state_dict = torch.load(cfg.pose_guider_path, map_location="cpu", weights_only=True)
         self.pose_guider.load_state_dict(pose_guider_state_dict)
         del pose_guider_state_dict
 
         self.motion_encoder = MotEncoder().to(dtype=self.dtype, device=self.device).eval()
-        motion_encoder_state_dict = torch.load(cfg.motion_encoder_path, map_location="cpu")
+        motion_encoder_state_dict = torch.load(cfg.motion_encoder_path, map_location="cpu", weights_only=True)
         self.motion_encoder.load_state_dict(motion_encoder_state_dict)
         del motion_encoder_state_dict
 
         self.pose_encoder = MotionExtractor(num_kp=21).to(device=self.device, dtype=self.dtype).eval()
-        pose_encoder_state_dict = torch.load(cfg.pose_encoder_path, map_location="cpu")
+        pose_encoder_state_dict = torch.load(cfg.pose_encoder_path, map_location="cpu", weights_only=True)
         self.pose_encoder.load_state_dict(pose_encoder_state_dict, strict=False)
         del pose_encoder_state_dict
 
@@ -72,7 +72,7 @@ class PersonaLive:
             cfg.pretrained_base_model_path,
             subfolder="unet",
         ).to(dtype=self.dtype, device=self.device)
-        reference_unet_state_dict = torch.load(cfg.reference_unet_weight_path, map_location="cpu")
+        reference_unet_state_dict = torch.load(cfg.reference_unet_weight_path, map_location="cpu", weights_only=True)
         self.reference_unet.load_state_dict(reference_unet_state_dict)
         del reference_unet_state_dict
 

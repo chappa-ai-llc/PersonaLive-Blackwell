@@ -1,42 +1,109 @@
 # PersonaLive (Unofficial Blackwell/GB10 Support)
 
-> **⚠️ NOTE:** This is a modified fork of the original [PersonaLive by GVCLab](https://github.com/GVCLab/PersonaLive). All credit for the model architecture and core logic belongs to the original authors. This repository exists solely to provide patches and a launcher for **NVIDIA Blackwell (GB10)** and mixed-GPU setups (RTX 3090/4090).
+> **⚠️ NOTE:** This is a modified fork of the original [PersonaLive by GVCLab](https://github.com/GVCLab/PersonaLive). All credit for the model architecture and core logic belongs to the original authors. This repository adds support for **NVIDIA Blackwell (GB10, DGX Spark)** and mixed-GPU setups (RTX 3090/4090), and keeps the dependencies free of known vulnerabilities.
 
-## 🚀 What's New in This Fork?
-* **Blackwell (GB10) Support:** Patched PyTorch and ONNX internals to prevent crashes on CUDA 13+ / GB10 hardware.
-* **Multi-GPU Launcher:** A new `launcher.py` that auto-detects GPUs and isolates processes (fixes crashes when mixing GB10s with RTX cards).
-* **Auto-Compilation:** Automatically compiles TensorRT engines for your specific GPU architecture on first launch.
-* **FP32/FP16 Auto-Casting:** Fixes `cuMemcpy` crashes caused by precision mismatches in the original inference pipeline.
+## What this fork changes
 
-## 🛠 Installation for Blackwell & RTX Users
+* **Blackwell (GB10) support:** PyTorch 2.13 and later run on GB10 (sm_121) as shipped; nothing patches installed packages.
+* **Multi-GPU launcher:** `launcher.py` detects GPUs and isolates each process on one (fixes crashes when mixing GB10s with RTX cards).
+* **Auto-compilation:** compiles the TensorRT engine for your GPU on first launch and caches it per GPU model.
+* **FP32/FP16 auto-casting:** fixes `cuMemcpy` crashes caused by precision mismatches in the original inference pipeline.
+* **Secure by default:** hash-pinned dependencies with no known advisories, a plain HTML/JavaScript web page with no npm or third-party code, and a webcam server that listens on this machine only and needs an access key. See [SECURITY.md](SECURITY.md).
 
-### 1. Clone & Install
+## Installation
+
+Needs Python 3.12 or later, an NVIDIA driver for CUDA 13, and `ffmpeg` for saving videos with audio. The lock file covers Linux x86_64, Linux aarch64 (DGX Spark) and Windows x86_64.
+
 ```bash
 git clone https://github.com/chappa-ai-llc/PersonaLive-Blackwell.git
 cd PersonaLive-Blackwell
-pip install -r requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --require-hashes -r requirements.txt
 ```
 
-### 2. Download Weights
-You must download the model weights before running the software.
+`requirements.txt` pins every package to one version with its SHA-256 hashes, and pip refuses anything else. The TensorRT libraries arrive through NVIDIA's installer package, which downloads them from `pypi.nvidia.com` and checks them against that index's hashes (SECURITY.md, "Dependencies").
+
+### Download the weights
+
 ```bash
 python tools/download_weights.py
 ```
-*(Or follow the manual download links in the "Original README" section below).*
 
-### 3. Apply Hardware Patches
-This step is **mandatory** for GB10/Blackwell users to fix PyTorch/ONNX crashes.
-```bash
-python apply_patches.py
-```
+It downloads each file from a fixed Hugging Face commit and checks its SHA-256 against `tools/weights.lock.json`. Until those pins are recorded (SECURITY.md, "Model weights"), it says so and downloads nothing.
 
-### 4. Launch
-Use the new interactive launcher. It handles engine compilation, GPU selection, and starting the web server.
+### Launch
+
 ```bash
 python launcher.py
 ```
 
+The launcher picks the GPU (it asks when there are several), builds the TensorRT engine on first use (10 to 20 minutes), and starts the webcam server. The server prints an address with a one-time access key, such as `http://127.0.0.1:7860/#key=...`: open it in your browser.
+
+## Running the webcam server
+
+```bash
+python inference_online.py --acceleration tensorrt
+```
+
+Use `--acceleration none` for plain PyTorch attention (no engine needed).
+
+**How to use**: choose a portrait ➡️ Fuse reference ➡️ Start animation ➡️ Enjoy! 🎉
+
+| Option | Environment variable | Default | What it does |
+|---|---|---|---|
+| `--host` | `HOST` | `127.0.0.1` | Address to listen on. Any address other than this machine needs TLS (below). |
+| `--port` | `PORT` | `7860` | Port. |
+| `--access-key-file` | `PERSONALIVE_ACCESS_KEY_FILE` | none | File with the access key (at least 32 characters, mode 600). Without it, a new key is made for each run and printed with the address. |
+| `--ssl-certfile`, `--ssl-keyfile` | `SSL_CERTFILE`, `SSL_KEYFILE` | none | TLS certificate chain and private key (PEM). |
+| `--max-queue-size` | `MAX_QUEUE_SIZE` | `1` | Most browser sessions at once. |
+| `--acceleration` | `ACCELERATION` | `none` | `none`, `tensorrt`, or `xformers` (only with an xFormers build that matches your PyTorch; none is installed). |
+
+**From another machine.** Browsers allow the camera only on `https://` pages or on `localhost`, so remote use needs TLS, and the server refuses to listen on another address without it. Use a certificate your browser trusts (for example one from your own CA), keep its key file readable by you only, and keep the access key in a file:
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))" > ~/.personalive_key
+chmod 600 ~/.personalive_key
+python inference_online.py --host 0.0.0.0 --ssl-certfile cert.pem --ssl-keyfile key.pem --access-key-file ~/.personalive_key
+```
+
+Then open `https://<this machine>:7860/` and enter the key.
+
+## Offline inference
+
+```bash
+python inference_offline.py
+```
+
+* `-L`: Max number of frames to generate. (Default: 100)
+* `--use_xformers`: Use xFormers attention; needs an xFormers build that matches your PyTorch. (Default: off)
+* `--stream_gen`: Enable streaming generation strategy. (Default: True)
+* `--reference_image`: Path to a specific reference image. Overrides settings in config.
+* `--driving_video`: Path to a specific driving video. Overrides settings in config.
+
+Faces are cropped with the model's own keypoint detector (LivePortrait), as in the webcam path.
+
+## TensorRT acceleration
+
+`launcher.py` builds the engine for you. To build it by hand:
+
+```bash
+python torch2trt.py
+```
+
+TensorRT can roughly double the speed. Building the engine takes about 20 minutes, and its optimizations may cause slight variations or a small drop in output quality. Build it again on each GPU model you use.
+
+## Checking an upgrade
+
+```bash
+python -m unittest discover -s tests -v
+python tools/smoke_random_weights.py scratchpad/smoke
+```
+
+The first runs the webcam server's security tests; the second runs the whole online pipeline on CPU with random weights (a few minutes, about 8 GB of disk). After changing a dependency in `pyproject.toml`, regenerate the lock with `tools/lock.sh` and run both.
+
 ---
+
 <div align="center">
 
 <img src="assets/header.svg" alt="PersonaLive" width="100%">
@@ -53,15 +120,6 @@ python launcher.py
 <img src="assets/demo_3.gif" width="46%"> &nbsp;&nbsp; <img src="assets/demo_2.gif" width="40.5%">
 </div>
 
-## 📋 TODO
-- [ ] If you find PersonaLive useful or interesting, please give us a Star🌟! Your support drives us to keep improving.
-- [ ] Fix bugs (If you encounter any issues, please feel free to open an issue or contact me! 🙏)
-- [ ] Enhance WebUI (Support reference image replacement).
-- [x] **[2025.12.22]** 🔥 Supported streaming strategy in offline inference to generate long videos on 12GB VRAM!
-- [x] **[2025.12.17]** 🔥 [ComfyUI-PersonaLive](https://github.com/okdalto/ComfyUI-PersonaLive) is now supported! (Thanks to [@okdalto](https://github.com/okdalto))
-- [x] **[2025.12.15]** 🔥 Release `paper`!
-- [x] **[2025.12.12]** 🔥 Release `inference code`, `config`, and `pretrained weights`!
-
 ## ⚙️ Framework
 <img src="assets/overview.png" alt="Image 1" width="100%">
 
@@ -69,35 +127,13 @@ python launcher.py
 We present PersonaLive, a `real-time` and `streamable` diffusion framework capable of generating `infinite-length` portrait animations on a single `12GB GPU`.
 
 
-## 🚀 Getting Started (Original Methods)
-> **Note:** For the updated installation method compatible with CUDA 13+, please see the top of this README. The instructions below are the original methods provided by the authors.
+## ⏬ Weights from the upstream authors
 
-### 🛠 Installation
-```
-# clone this repo
-git clone https://github.com/GVCLab/PersonaLive
-cd PersonaLive
-
-# Create conda environment
-conda create -n personalive python=3.10
-conda activate personalive
-
-# Install packages with pip
-pip install -r requirements_base.txt
-```
-
-### ⏬ Download weights
-Option 1: Download pre-trained weights of base models and other components ([sd-image-variations-diffusers](https://huggingface.co/lambdalabs/sd-image-variations-diffusers) and [sd-vae-ft-mse](https://huggingface.co/stabilityai/sd-vae-ft-mse)). You can run the following command to download weights automatically:
-    
-```bash
-python tools/download_weights.py
-```
-
-Option 2: Download pre-trained weights into the `./pretrained_weights` folder from one of the below URLs:
+The upstream authors also publish the weights at these links. Files downloaded by hand are not checked against `tools/weights.lock.json`; `tools/download_weights.py` is the verified route.
     
 <a href='https://drive.google.com/drive/folders/1GOhDBKIeowkMpBnKhGB8jgEhJt_--vbT?usp=drive_link'><img src='https://img.shields.io/badge/Google%20Drive-5B8DEF?style=for-the-badge&logo=googledrive&logoColor=white'></a> <a href='https://pan.baidu.com/s/1DCv4NvUy_z7Gj2xCGqRMkQ?pwd=gj64'><img src='https://img.shields.io/badge/Baidu%20Netdisk-3E4A89?style=for-the-badge&logo=baidu&logoColor=white'></a> <a href='https://modelscope.cn/models/huaichang/PersonaLive'><img src='https://img.shields.io/badge/ModelScope-624AFF?style=for-the-badge&logo=alibabacloud&logoColor=white'></a> <a href='https://huggingface.co/huaichang/PersonaLive'><img src='https://img.shields.io/badge/HuggingFace-E67E22?style=for-the-badge&logo=huggingface&logoColor=white'></a>
 
-Finally, these weights should be organized as follows:
+The weights end up organized like this:
 ```
 pretrained_weights
 ├── onnx
@@ -127,57 +163,9 @@ pretrained_weights
     └── unet_work.engine
 ```
 
-### 🎞️ Offline Inference
-Run offline inference with the default configuration:
+## ⏱️ Latency
 
-```
-python inference_offline.py
-```
-
-* `-L`: Max number of frames to generate. (Default: 100)
-* `--use_xformers`: Enable xFormers memory efficient attention. (Default: True)
-* `--stream_gen`: Enable streaming generation strategy. (Default: True)
-* `--reference_image`: Path to a specific reference image. Overrides settings in config.
-* `--driving_video`: Path to a specific driving video. Overrides settings in config.
-
-⚠️ Note for RTX 50-Series (Blackwell) Users: xformers is not yet fully compatible with the new architecture. To avoid crashes, please disable it by running:
-
-```
-python inference_offline.py --use_xformers False
-```
-
-### 📸 Online Inference
-#### 📦 Setup Web UI
-```
-# install Node.js 18+
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-nvm install 18
-
-cd webcam
-source start.sh
-```
-
-#### 🏎️ Acceleration (Optional)
-Converting the model to TensorRT can significantly speed up inference (~ 2x ⚡️). Building the engine may take about `20 minutes` depending on your device. Note that TensorRT optimizations may lead to slight variations or a small drop in output quality.
-```
-pip install -r requirement_trt.txt
-
-python torch2trt.py
-```
-*The provided TensorRT model is from an `H100`. We recommend `ALL users` (including H100 users) re-run `python torch2trt.py` locally to ensure best compatibility.*
-
-#### ▶️ Start Streaming
-```
-python inference_online.py --acceleration none (for RTX 50-Series) or xformers or tensorrt
-```
-Then open `http://0.0.0.0:7860` in your browser. (*If `http://0.0.0.0:7860` does not work well, try `http://localhost:7860`)
-
-**How to use**: Upload Image ➡️ Fuse Reference ➡️ Start Animation ➡️ Enjoy! 🎉
-<div align="center">
-  <img src="assets/guide.png" alt="PersonaLive" width="60%">
-</div>
-
-**Regarding Latency**: Latency varies depending on your device's computing power. You can try the following methods to optimize it:
+Latency varies depending on your device's computing power. You can try the following methods to optimize it:
 
 1. Lower the "Driving FPS" setting in the WebUI to reduce the computational workload.
 2. You can increase the multiplier (e.g., set to `num_frames_needed * 4` or higher) to better match your device's inference speed. https://github.com/GVCLab/PersonaLive/blob/6953d1a8b409f360a3ee1d7325093622b29f1e22/webcam/util.py#L73

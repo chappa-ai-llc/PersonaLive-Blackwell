@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PersonaLive</title>
+  <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="app.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>PersonaLive</h1>
+    <p class="sub">Live portrait animation, running on your own GPU.
+      Model by <a href="https://github.com/GVCLab/PersonaLive" target="_blank" rel="noopener noreferrer">GVCLab</a>.</p>
+  </header>
+
+  <main>
+    <p id="warning" class="msg warn" role="alert" hidden></p>
+    <p id="info" class="msg ok" role="status" hidden></p>
+
+    <form id="signin" class="card" hidden>
+      <h2>Access key</h2>
+      <p>The server printed an address with the key when it started. Open that address,
+        or paste the key here.</p>
+      <label for="key">Key</label>
+      <input id="key" name="key" type="password" autocomplete="off" required minlength="32">
+      <button type="submit">Sign in</button>
+    </form>
+
+    <div id="app" class="grid" hidden>
+      <section class="inputs">
+        <figure class="tile">
+          <figcaption>Portrait</figcaption>
+          <img id="refPreview" alt="" hidden>
+          <span id="refEmpty" class="empty">Choose a portrait photo</span>
+          <label class="chip">Select<input id="refFile" type="file" accept="image/jpeg,image/png,image/webp" hidden></label>
+        </figure>
+        <figure class="tile">
+          <figcaption>Camera</figcaption>
+          <video id="camera" playsinline autoplay muted></video>
+          <span id="camEmpty" class="empty">Camera starts with the animation</span>
+          <div class="chip-row">
+            <button id="share" type="button" class="chip">Share screen</button>
+            <select id="devices" class="chip" aria-label="Camera" hidden></select>
+          </div>
+        </figure>
+      </section>
+
+      <section class="output">
+        <figure class="tile big">
+          <figcaption>Animation</figcaption>
+          <canvas id="output" width="512" height="512"></canvas>
+          <span id="outEmpty" class="empty">Not running</span>
+          <button id="snapshot" type="button" class="chip corner" disabled>Snapshot</button>
+        </figure>
+        <div class="controls">
+          <label for="fps">Driving FPS: <output id="fpsValue">25</output></label>
+          <input id="fps" type="range" min="1" max="30" step="1" value="25">
+          <button id="fuse" type="button" disabled>Fuse reference</button>
+          <button id="toggle" type="button">Start animation</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <canvas id="work" width="512" height="512" hidden></canvas>
+</body>
+</html>

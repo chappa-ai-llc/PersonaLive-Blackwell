@@ -396,22 +396,37 @@ def get_boxes(keypoints, height=512, width=512):
 
     return boxes
 
-def crop_face(image_pil, face_mesh):
-    image = np.array(image_pil)
+@torch.no_grad()
+def crop_face(image_pil, pose_encoder):
+    """Crop the face from a PIL image, as a NumPy array (H, W, 3).
+
+    The box comes from the LivePortrait keypoints (pose_encoder, a
+    MotionExtractor), the same way the online path crops faces (get_boxes).
+    This replaced MediaPipe Face Mesh, whose legacy API needs releases with
+    known vulnerabilities.
+    """
+    rgb = image_pil.convert("RGB")
+    image = np.array(rgb)
     h, w = image.shape[:2]
-    results = face_mesh.process(image)
-    face_landmarks = results.multi_face_landmarks[0]
-    coords = [(int(l.x * w), int(l.y * h)) for l in face_landmarks.landmark]
-    xs, ys = zip(*coords)
-    x1, y1 = min(xs), min(ys)
-    x2, y2 = max(xs), max(ys)
-    face_box = (x1, y1, x2, y2)
+    small = torch.from_numpy(np.array(rgb.resize((256, 256)))).permute(2, 0, 1)
+    small = small.float().div(255.0).unsqueeze(0)  # (1, 3, 256, 256) in [0, 1]
+    kp = pose_encoder(small.to(device=pose_encoder.device, dtype=pose_encoder.dtype))
+    left, top, right, bot = get_boxes(kp.float().cpu(), height=h, width=w)[0].tolist()
+    if right <= left or bot <= top:
+        return image
+    return image[top:bot, left:right]
 
-    left, top, right, bot = scale_bb(face_box, scale=1.1, size=image.shape[:2])
 
-    face_patch = image[int(top) : int(bot), int(left) : int(right)]
+def read_video_frames(video_path, limit=None):
+    """Decode a video's frames as RGB NumPy arrays (H, W, 3), at most `limit`."""
+    frames = []
+    with av.open(video_path) as container:
+        for frame in container.decode(video=0):
+            frames.append(frame.to_ndarray(format="rgb24"))
+            if limit is not None and len(frames) >= limit:
+                break
+    return frames
 
-    return face_patch
 
 def scale_bb(bbox, scale, size):
     left, top, right, bot = bbox

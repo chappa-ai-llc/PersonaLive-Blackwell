@@ -1,0 +1,30 @@
+{
+  "huaichang/PersonaLive": {
+    "files": {
+      "pretrained_weights/personalive/denoising_unet.pth": null,
+      "pretrained_weights/personalive/motion_encoder.pth": null,
+      "pretrained_weights/personalive/motion_extractor.pth": null,
+      "pretrained_weights/personalive/pose_guider.pth": null,
+      "pretrained_weights/personalive/reference_unet.pth": null,
+      "pretrained_weights/personalive/temporal_module.pth": null
+    },
+    "revision": null
+  },
+  "lambdalabs/sd-image-variations-diffusers": {
+    "files": {
+      "image_encoder/config.json": null,
+      "image_encoder/pytorch_model.bin": null,
+      "model_index.json": null,
+      "unet/config.json": null,
+      "unet/diffusion_pytorch_model.bin": null
+    },
+    "revision": null
+  },
+  "stabilityai/sd-vae-ft-mse": {
+    "files": {
+      "config.json": null,
+      "diffusion_pytorch_model.bin": null
+    },
+    "revision": null
+  }
+}

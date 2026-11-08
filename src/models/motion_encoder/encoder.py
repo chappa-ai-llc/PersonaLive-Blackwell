@@ -4,7 +4,6 @@ import torch.nn.functional as F
 import numpy as np
 from .FAN_feature_extractor import FAN_SA
 from einops import rearrange
-from diffusers.models.embeddings import get_1d_sincos_pos_embed_from_grid
 from diffusers.models.modeling_utils import ModelMixin
 
 def zero_module(module):
@@ -13,6 +12,22 @@ def zero_module(module):
     for p in module.parameters():
         p.detach().zero_()
     return module
+
+def get_1d_sincos_pos_embed_from_grid(embed_dim, pos):
+    """1D sine-cosine position embedding of `pos`, as a NumPy array (M, D).
+
+    The NumPy implementation diffusers shipped until 0.29; later releases take
+    and return torch tensors instead.
+    """
+    if embed_dim % 2 != 0:
+        raise ValueError("embed_dim must be divisible by 2")
+    omega = np.arange(embed_dim // 2, dtype=np.float64)
+    omega /= embed_dim / 2.0
+    omega = 1.0 / 10000**omega
+    pos = pos.reshape(-1)
+    out = np.einsum("m,d->md", pos, omega)
+    return np.concatenate([np.sin(out), np.cos(out)], axis=1)
+
 
 class MotEncoder(ModelMixin):
     def __init__(self, out_ch=16):

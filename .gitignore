@@ -17,3 +17,11 @@ pretrained_weights/
 # Ignore output results
 results/
 outputs/
+.venv/
+
+# Working files and local secrets (never committed)
+scratchpad/
+secrets/
+*.pem
+*.key
+uv.lock
