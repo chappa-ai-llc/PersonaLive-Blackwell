@@ -1,0 +1,14 @@
+{
+  "cards": [],
+  "phases": [
+    {
+      "end": "2026-11-22",
+      "id": "P0",
+      "label": "Onboard: MDD from the design doc, README and first board",
+      "note": "From docs/build-kickoff.md",
+      "pct": 0,
+      "start": "2026-11-08",
+      "status": "active"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "docs": [
+    "docs/build-kickoff.md"
+  ],
+  "kickoff": "docs/build-kickoff.md",
+  "project": "personalive-blackwell"
+}
