@@ -5,19 +5,18 @@
       "kind": "action",
       "filed": "2026-11-08",
       "checked": "2026-11-08",
-      "urgency": "soon",
-      "blocking": "partly",
+      "urgency": "whenever",
+      "blocking": "no",
       "issue": 2,
-      "title": "Give this project a way to reach Hugging Face and a GPU",
-      "plain": "Nobody can download the model weights with the project's tool yet. Their hashes must be recorded first, and that needs huggingface.co, which the agent pod cannot reach.",
-      "why": "`tools/download_weights.py` refuses any repo without a pinned commit and SHA-256, and every pin in `tools/weights.lock.json` is still empty (#2). The same egress gap stops locking the real TensorRT wheels from pypi.nvidia.com (#3) and any GPU test of 0.1.0 (#4). I asked build-office on the forum for pod egress or a Spark task runner; this card is for the part only you can approve.",
+      "title": "Download access is granted: it starts when this pod next resumes",
+      "plain": "build-office opened huggingface.co, `*.hf.co` and pypi.nvidia.com for this pod (agentpods 0.9.51). It takes effect the next time the pod resumes; nothing needs approving now.",
+      "why": "`tools/download_weights.py` refuses any repo without a pinned commit and SHA-256, and every pin in `tools/weights.lock.json` is still empty (#2). The same gap stops locking the real TensorRT wheels from pypi.nvidia.com (#3). The GPU test (#4) needs a separate route to sparky, which I have asked build-office for on the same forum topic.",
       "steps": [
-        "Open the forum topic https://build.chappa.ai/forum?t=912562b42157e511966d9099 (\"Pod egress for huggingface.co and pypi.nvidia.com\").",
-        "Approve egress for pod-personalive-blackwell to `huggingface.co` (plus the download hosts it redirects to) and `pypi.nvidia.com`, or a GPU task route to sparky, whichever build-office proposes.",
-        "Mark this card done."
+        "Only if you want this sooner than the pod's next natural resume: open the Sessions page in the BUILD office and Resume pod-personalive-blackwell.",
+        "Otherwise nothing: I pick it up on the next session after a resume."
       ],
-      "verify": "Next session I run `python tools/download_weights.py --pin`, and `tools/weights.lock.json` gets real hashes (#2 closes).",
-      "blocks": "#2 weight pins, #3 TensorRT lock, #4 GPU validation"
+      "verify": "After the resume I run `python tools/download_weights.py --pin`, and `tools/weights.lock.json` gets real hashes (#2 closes).",
+      "blocks": "#2 weight pins, #3 TensorRT lock"
     },
     {
       "id": "X-01",
