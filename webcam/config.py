@@ -9,6 +9,7 @@ from typing import NamedTuple, Optional
 import argparse
 import os
 
+from webcam.preferences import PREFS_ENV
 from webcam.security import KEY_ENV
 
 
@@ -19,6 +20,7 @@ class Args(NamedTuple):
     ssl_certfile: Optional[str]
     ssl_keyfile: Optional[str]
     access_key_file: Optional[str]
+    prefs_file: Optional[str]
     acceleration: str
     config_path: str
 
@@ -53,6 +55,11 @@ def parse_args(argv=None) -> Args:
         "--access-key-file", dest="access_key_file", default=os.getenv(KEY_ENV),
         help=f"File holding the access key, at least 32 characters, mode 600 (env {KEY_ENV}). "
              "Without it a new key is made for each run and printed with the address.")
+    parser.add_argument(
+        "--prefs-file", dest="prefs_file", default=os.getenv(PREFS_ENV),
+        help="Where the page's appearance (theme, light or dark, scale, type) is saved "
+             f"(env {PREFS_ENV}; default preferences.json in personalive/ under your "
+             "configuration folder: ~/.config on Linux, %%APPDATA%% on Windows)")
     parser.add_argument(
         "--acceleration", default=os.getenv("ACCELERATION", "none"),
         choices=["none", "xformers", "tensorrt"],

@@ -1,0 +1,681 @@
+/* Vendored by style-guide sg.py 1.7.0 (STANDARD.md, chappa-ai-llc/style-guide): themes modernist 1.2.1, flight-manual 1.1.0, aurora 1.2.0, ember 1.2.0, high-contrast 1.0.1. Do not edit: re-run `sg.py vendor`. */
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/Archivo-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 500; font-display: swap; src: url("./fonts/Archivo-Medium.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 600; font-display: swap; src: url("./fonts/Archivo-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 700; font-display: swap; src: url("./fonts/Archivo-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Archivo"; font-style: normal; font-weight: 800; font-display: swap; src: url("./fonts/Archivo-ExtraBold.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 500; font-display: swap; src: url("./fonts/BarlowCondensed-Medium.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 600; font-display: swap; src: url("./fonts/BarlowCondensed-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 700; font-display: swap; src: url("./fonts/BarlowCondensed-Bold.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/IBMPlexMono-Regular.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap; src: url("./fonts/IBMPlexMono-Medium.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("./fonts/IBMPlexSans-Regular.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("./fonts/IBMPlexSans-Medium.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("./fonts/IBMPlexSans-SemiBold.woff2") format("woff2"); }
+/* style-guide theme "modernist" 1.2.1 (STANDARD 1.4.0). Light, then dark twice: system dark and explicit dark. */
+:root[data-preset="modernist"], .preset-preview[data-preset="modernist"] {
+  color-scheme: light;
+  --font-sans: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-head: var(--font-sans);
+  --font-mono: "IBM Plex Mono","Cascadia Mono",Consolas,monospace;
+  --radius: 0;
+  --rule-w: 2px;
+  --h-case: none;
+  --h-track: -.01em;
+  --h-weight: 800;
+  --eyebrow-track: .14em;
+  --body-size: 14px;
+  --label-size: 9px;
+  --label-size-lg: 10px;
+  --h1-size: 22px;
+  --h2-size: 16px;
+  --h3-size: 13px;
+  --bg: #f3f2f2;
+  --panel: #ffffff;
+  --panel2: #eae9e9;
+  --border: #d7d3d3;
+  --hair: #d7d3d3;
+  --rule: #201e1d;
+  --text: #201e1d;
+  --dim: #6b6767;
+  --accent: #201e1d;
+  --accent2: #7d7979;
+  --on-accent: #fff;
+  --ok: #49760e;
+  --warn: #8e6200;
+  --fail: #c92910;
+  --info: #2b6cb0;
+  --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+  --warn-soft: color-mix(in srgb, var(--warn) 12%, var(--panel));
+  --fail-soft: color-mix(in srgb, var(--fail) 12%, var(--panel));
+  --info-soft: color-mix(in srgb, var(--info) 12%, var(--panel));
+  --focus: var(--info);
+  --sel-bg: #201e1d;
+  --sel-ink: #f3f2f2;
+  --head: #1d5fa8;
+  --high: #c2410c;
+  --low: #68701f;
+  --red: #ec3013;
+  --chart-1: var(--rule);
+  --chart-2: var(--info);
+  --chart-3: var(--warn);
+  --chart-4: var(--low);
+  --chart-5: var(--accent2);
+  --chart-6: var(--high);
+  --map-water: #6ea8d8;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-preset="modernist"]:not([data-theme="light"]), :root:not([data-theme="light"]) .preset-preview[data-preset="modernist"] {
+    color-scheme: dark;
+    --bg: #201e1d;
+    --panel: #2d2b2b;
+    --panel2: #262424;
+    --border: #444141;
+    --hair: #3a3838;
+    --rule: #f3f2f2;
+    --text: #f3f2f2;
+    --dim: #a8a5a5;
+    --accent: #f3f2f2;
+    --accent2: #9b9797;
+    --on-accent: #201e1d;
+    --ok: #8ecb3f;
+    --warn: #e3b341;
+    --fail: #ff7b67;
+    --info: #72a9db;
+    --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+    --warn-soft: color-mix(in srgb, var(--warn) 12%, var(--panel));
+    --fail-soft: color-mix(in srgb, var(--fail) 12%, var(--panel));
+    --info-soft: color-mix(in srgb, var(--info) 12%, var(--panel));
+    --focus: var(--info);
+    --sel-bg: #f3f2f2;
+    --sel-ink: #201e1d;
+    --head: #79b4ff;
+    --high: #fb923c;
+    --low: #c3cf52;
+    --red: #ff563c;
+    --chart-1: var(--rule);
+    --chart-2: var(--info);
+    --chart-3: var(--warn);
+    --chart-4: var(--low);
+    --chart-5: var(--accent2);
+    --chart-6: var(--high);
+    --map-water: #6ea8d8;
+  }
+}
+:root[data-preset="modernist"][data-theme="dark"], :root[data-theme="dark"] .preset-preview[data-preset="modernist"] {
+  color-scheme: dark;
+  --bg: #201e1d;
+  --panel: #2d2b2b;
+  --panel2: #262424;
+  --border: #444141;
+  --hair: #3a3838;
+  --rule: #f3f2f2;
+  --text: #f3f2f2;
+  --dim: #a8a5a5;
+  --accent: #f3f2f2;
+  --accent2: #9b9797;
+  --on-accent: #201e1d;
+  --ok: #8ecb3f;
+  --warn: #e3b341;
+  --fail: #ff7b67;
+  --info: #72a9db;
+  --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+  --warn-soft: color-mix(in srgb, var(--warn) 12%, var(--panel));
+  --fail-soft: color-mix(in srgb, var(--fail) 12%, var(--panel));
+  --info-soft: color-mix(in srgb, var(--info) 12%, var(--panel));
+  --focus: var(--info);
+  --sel-bg: #f3f2f2;
+  --sel-ink: #201e1d;
+  --head: #79b4ff;
+  --high: #fb923c;
+  --low: #c3cf52;
+  --red: #ff563c;
+  --chart-1: var(--rule);
+  --chart-2: var(--info);
+  --chart-3: var(--warn);
+  --chart-4: var(--low);
+  --chart-5: var(--accent2);
+  --chart-6: var(--high);
+  --map-water: #6ea8d8;
+}
+/* style-guide theme "flight-manual" 1.1.0 (STANDARD 1.3.0). Light, then dark twice: system dark and explicit dark.
+   Source: the owner's "DNSGUARD Engineering Manual" artifact, Rev 144 (2026-10-11). --ok and --ok-soft are not in the
+   artifact: --ok values come from DNSGuard's "manual" preset, --ok-soft is mixed. See theme.toml. */
+:root[data-preset="flight-manual"], .preset-preview[data-preset="flight-manual"] {
+  color-scheme: light;
+  --font-sans: "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-head: "Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --font-mono: "IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --radius: 0;
+  --rule-w: 1.5px;
+  --h-case: uppercase;
+  --h-track: .04em;
+  --h-weight: 600;
+  --eyebrow-track: .14em;
+  --body-size: 14px;
+  --label-size: 11px;
+  --label-size-lg: 12px;
+  --h1-size: 26px;
+  --h2-size: 19px;
+  --h3-size: 15px;
+  --bg: #F7F6F2;
+  --panel: #FFFFFF;
+  --panel2: #F7F6F2;
+  --border: #8A8F96;
+  --hair: #D5D7DA;
+  --rule: #1B1F24;
+  --text: #1B1F24;
+  --dim: #4A5059;
+  --accent: #1F5F8B;
+  --accent2: #4A5059;
+  --on-accent: #FFFFFF;
+  --ok: #3F6B3F;
+  --warn: #97620C;
+  --fail: #9E2A2B;
+  --info: #1F5F8B;
+  --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+  --warn-soft: #FBF1DC;
+  --fail-soft: #F8E3E3;
+  --info-soft: #E3EDF5;
+  --focus: var(--info);
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-preset="flight-manual"]:not([data-theme="light"]), :root:not([data-theme="light"]) .preset-preview[data-preset="flight-manual"] {
+    color-scheme: dark;
+    --bg: #111418;
+    --panel: #171B20;
+    --panel2: #111418;
+    --border: #6F757D;
+    --hair: #2E343B;
+    --rule: #E6E4DE;
+    --text: #E6E4DE;
+    --dim: #AEB3BA;
+    --accent: #6FA8D6;
+    --accent2: #AEB3BA;
+    --on-accent: #111418;
+    --ok: #8FBF8F;
+    --warn: #E0A53A;
+    --fail: #E07A7B;
+    --info: #6FA8D6;
+    --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+    --warn-soft: #3A2D12;
+    --fail-soft: #3D1D1E;
+    --info-soft: #1C2E3D;
+    --focus: var(--info);
+  }
+}
+:root[data-preset="flight-manual"][data-theme="dark"], :root[data-theme="dark"] .preset-preview[data-preset="flight-manual"] {
+  color-scheme: dark;
+  --bg: #111418;
+  --panel: #171B20;
+  --panel2: #111418;
+  --border: #6F757D;
+  --hair: #2E343B;
+  --rule: #E6E4DE;
+  --text: #E6E4DE;
+  --dim: #AEB3BA;
+  --accent: #6FA8D6;
+  --accent2: #AEB3BA;
+  --on-accent: #111418;
+  --ok: #8FBF8F;
+  --warn: #E0A53A;
+  --fail: #E07A7B;
+  --info: #6FA8D6;
+  --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+  --warn-soft: #3A2D12;
+  --fail-soft: #3D1D1E;
+  --info-soft: #1C2E3D;
+  --focus: var(--info);
+}
+/* Optional component classes for the flight-manual theme (STANDARD 1.0.0 section 11). Tokens only, no hex.
+   Names are prefixed fm- so they never clash with an app's own classes. Square corners come from --radius. */
+.fm-sheet { background: var(--panel); border: var(--rule-w) solid var(--rule); color: var(--text); font-family: var(--font-sans); }
+.fm-sheet-head { display: grid; grid-template-columns: 1fr auto; border-bottom: var(--rule-w) solid var(--rule);
+  font-family: var(--font-head); text-transform: uppercase; letter-spacing: .06em; }
+.fm-sheet-head .fm-l, .fm-sheet-head .fm-r { padding: 8px 14px; font-size: 13px; }
+.fm-sheet-head .fm-r { border-left: var(--rule-w) solid var(--rule); text-align: right; font-family: var(--font-mono);
+  text-transform: none; letter-spacing: 0; font-size: 12px; }
+.fm-sheet-body { padding: 22px 24px 26px; }
+.fm-sheet-foot { display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; border-top: var(--rule-w) solid var(--rule);
+  padding: 7px 14px; font-family: var(--font-mono); font-size: 11.5px; color: var(--dim); }
+.fm-h { font-family: var(--font-head); text-transform: var(--h-case); letter-spacing: var(--h-track); font-weight: var(--h-weight); line-height: 1.1; margin: 0 0 12px; }
+.fm-h .fm-no { font-family: var(--font-mono); font-weight: 500; letter-spacing: 0; color: var(--dim); margin-right: 10px; font-size: .8em; text-transform: none; }
+.fm-eyebrow { font-family: var(--font-head); text-transform: uppercase; letter-spacing: var(--eyebrow-track); font-size: 13px; color: var(--dim); }
+.fm-box { border: var(--rule-w) solid var(--rule); padding: 10px 14px; margin: 14px 0; display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+.fm-box .fm-lbl { font-family: var(--font-head); font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: 13px; padding: 2px 8px; border: var(--rule-w) solid currentColor; }
+.fm-box p { margin: 0; }
+.fm-box.fm-warning { border-color: var(--fail); background: var(--fail-soft); } .fm-box.fm-warning .fm-lbl { color: var(--fail); }
+.fm-box.fm-caution { border-color: var(--warn); background: var(--warn-soft); } .fm-box.fm-caution .fm-lbl { color: var(--warn); }
+.fm-box.fm-note { border-color: var(--border); background: var(--panel2); } .fm-box.fm-note .fm-lbl { color: var(--dim); }
+.fm-table { border-collapse: collapse; width: 100%; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.fm-table th, .fm-table td { border: 1px solid var(--border); padding: 5px 8px; text-align: left; vertical-align: top; }
+.fm-table th { font-family: var(--font-head); text-transform: uppercase; letter-spacing: .08em; font-size: 12px; background: var(--panel2); }
+/* style-guide theme "aurora" 1.2.0 (STANDARD 1.3.0). Light, then dark twice: system dark and explicit dark. */
+:root[data-preset="aurora"], .preset-preview[data-preset="aurora"] {
+  color-scheme: light;
+  --font-sans: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-head: var(--font-sans);
+  --font-mono: "IBM Plex Mono","Cascadia Mono",Consolas,monospace;
+  --radius: 6px;
+  --rule-w: 2px;
+  --h-case: none;
+  --h-track: -.01em;
+  --h-weight: 800;
+  --eyebrow-track: .14em;
+  --body-size: 14px;
+  --label-size: 9px;
+  --label-size-lg: 10px;
+  --h1-size: 22px;
+  --h2-size: 16px;
+  --h3-size: 13px;
+  --bg: #EEF3F8;
+  --panel: #FFFFFF;
+  --panel2: #E2EAF2;
+  --border: #C5D3E0;
+  --hair: #D5E0EA;
+  --rule: #163A5F;
+  --text: #122033;
+  --dim: #4F6478;
+  --accent: #1E5EA8;
+  --accent2: #3F7FB8;
+  --on-accent: #FFFFFF;
+  --ok: #1C7A50;
+  --warn: #8F6300;
+  --fail: #C12A50;
+  --info: #1B6FA0;
+  --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+  --warn-soft: color-mix(in srgb, var(--warn) 12%, var(--panel));
+  --fail-soft: color-mix(in srgb, var(--fail) 12%, var(--panel));
+  --info-soft: color-mix(in srgb, var(--info) 12%, var(--panel));
+  --focus: var(--info);
+  --sel-bg: #1E5EA8;
+  --sel-ink: #FFFFFF;
+  --head: #0B7070;
+  --high: #C4551F;
+  --low: #3E7A22;
+  --red: #C12A50;
+  --chart-1: #1E5EA8;
+  --chart-2: #0B7070;
+  --chart-3: #7C4DBD;
+  --chart-4: #C12A50;
+  --chart-5: #8F6300;
+  --chart-6: #3E7A22;
+  --map-water: #CFE0F0;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-preset="aurora"]:not([data-theme="light"]), :root:not([data-theme="light"]) .preset-preview[data-preset="aurora"] {
+    color-scheme: dark;
+    --bg: #0D1522;
+    --panel: #142031;
+    --panel2: #1A2A3E;
+    --border: #2A3E57;
+    --hair: #223449;
+    --rule: #BFD4EC;
+    --text: #E4ECF6;
+    --dim: #9DB0C6;
+    --accent: #6FB3FF;
+    --accent2: #5DA0E8;
+    --on-accent: #0D1522;
+    --ok: #52D39A;
+    --warn: #F2C14E;
+    --fail: #FF6B8A;
+    --info: #5FC3F0;
+    --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+    --warn-soft: color-mix(in srgb, var(--warn) 12%, var(--panel));
+    --fail-soft: color-mix(in srgb, var(--fail) 12%, var(--panel));
+    --info-soft: color-mix(in srgb, var(--info) 12%, var(--panel));
+    --focus: var(--info);
+    --sel-bg: #6FB3FF;
+    --sel-ink: #0D1522;
+    --head: #4FD1C5;
+    --high: #FF9A5C;
+    --low: #9BD46E;
+    --red: #FF6B8A;
+    --chart-1: #6FB3FF;
+    --chart-2: #4FD1C5;
+    --chart-3: #B48CFF;
+    --chart-4: #FF6B8A;
+    --chart-5: #F2C14E;
+    --chart-6: #9BD46E;
+    --map-water: #1B2E45;
+  }
+}
+:root[data-preset="aurora"][data-theme="dark"], :root[data-theme="dark"] .preset-preview[data-preset="aurora"] {
+  color-scheme: dark;
+  --bg: #0D1522;
+  --panel: #142031;
+  --panel2: #1A2A3E;
+  --border: #2A3E57;
+  --hair: #223449;
+  --rule: #BFD4EC;
+  --text: #E4ECF6;
+  --dim: #9DB0C6;
+  --accent: #6FB3FF;
+  --accent2: #5DA0E8;
+  --on-accent: #0D1522;
+  --ok: #52D39A;
+  --warn: #F2C14E;
+  --fail: #FF6B8A;
+  --info: #5FC3F0;
+  --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+  --warn-soft: color-mix(in srgb, var(--warn) 12%, var(--panel));
+  --fail-soft: color-mix(in srgb, var(--fail) 12%, var(--panel));
+  --info-soft: color-mix(in srgb, var(--info) 12%, var(--panel));
+  --focus: var(--info);
+  --sel-bg: #6FB3FF;
+  --sel-ink: #0D1522;
+  --head: #4FD1C5;
+  --high: #FF9A5C;
+  --low: #9BD46E;
+  --red: #FF6B8A;
+  --chart-1: #6FB3FF;
+  --chart-2: #4FD1C5;
+  --chart-3: #B48CFF;
+  --chart-4: #FF6B8A;
+  --chart-5: #F2C14E;
+  --chart-6: #9BD46E;
+  --map-water: #1B2E45;
+}
+/* style-guide theme "ember" 1.2.0 (STANDARD 1.3.0). Light, then dark twice: system dark and explicit dark. */
+:root[data-preset="ember"], .preset-preview[data-preset="ember"] {
+  color-scheme: light;
+  --font-sans: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-head: var(--font-sans);
+  --font-mono: "IBM Plex Mono","Cascadia Mono",Consolas,monospace;
+  --radius: 4px;
+  --rule-w: 2px;
+  --h-case: none;
+  --h-track: -.01em;
+  --h-weight: 800;
+  --eyebrow-track: .14em;
+  --body-size: 14px;
+  --label-size: 9px;
+  --label-size-lg: 10px;
+  --h1-size: 22px;
+  --h2-size: 16px;
+  --h3-size: 13px;
+  --bg: #FBF3EA;
+  --panel: #FFFCF8;
+  --panel2: #F3E6D8;
+  --border: #E0CDB8;
+  --hair: #E8D8C8;
+  --rule: #4A2A1A;
+  --text: #2E1A10;
+  --dim: #74553F;
+  --accent: #B23A0A;
+  --accent2: #B86A2D;
+  --on-accent: #FFFFFF;
+  --ok: #2A6F46;
+  --warn: #8F5600;
+  --fail: #B8102A;
+  --info: #1A639A;
+  --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+  --warn-soft: color-mix(in srgb, var(--warn) 12%, var(--panel));
+  --fail-soft: color-mix(in srgb, var(--fail) 12%, var(--panel));
+  --info-soft: color-mix(in srgb, var(--info) 12%, var(--panel));
+  --focus: var(--info);
+  --sel-bg: #B23A0A;
+  --sel-ink: #FFFFFF;
+  --head: #A82E7E;
+  --high: #BF3F0A;
+  --low: #5E6A18;
+  --red: #B8102A;
+  --chart-1: #B23A0A;
+  --chart-2: #A82E7E;
+  --chart-3: #1A639A;
+  --chart-4: #8F5600;
+  --chart-5: #2A6F46;
+  --chart-6: #6C3FB0;
+  --map-water: #EAD9C4;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-preset="ember"]:not([data-theme="light"]), :root:not([data-theme="light"]) .preset-preview[data-preset="ember"] {
+    color-scheme: dark;
+    --bg: #1A120E;
+    --panel: #251A14;
+    --panel2: #2E2119;
+    --border: #4A3528;
+    --hair: #3D2B20;
+    --rule: #F1DCC8;
+    --text: #F6E9DC;
+    --dim: #C2A58F;
+    --accent: #FF8A4C;
+    --accent2: #E8A070;
+    --on-accent: #1A120E;
+    --ok: #6FD39A;
+    --warn: #F2C45E;
+    --fail: #FF6B6B;
+    --info: #6AB8F0;
+    --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+    --warn-soft: color-mix(in srgb, var(--warn) 12%, var(--panel));
+    --fail-soft: color-mix(in srgb, var(--fail) 12%, var(--panel));
+    --info-soft: color-mix(in srgb, var(--info) 12%, var(--panel));
+    --focus: var(--info);
+    --sel-bg: #FF8A4C;
+    --sel-ink: #1A120E;
+    --head: #FF7AC6;
+    --high: #FF9F5A;
+    --low: #C8D86A;
+    --red: #FF6B6B;
+    --chart-1: #FF8A4C;
+    --chart-2: #FF7AC6;
+    --chart-3: #6AB8F0;
+    --chart-4: #F2C45E;
+    --chart-5: #6FD39A;
+    --chart-6: #B48CFF;
+    --map-water: #3A2A20;
+  }
+}
+:root[data-preset="ember"][data-theme="dark"], :root[data-theme="dark"] .preset-preview[data-preset="ember"] {
+  color-scheme: dark;
+  --bg: #1A120E;
+  --panel: #251A14;
+  --panel2: #2E2119;
+  --border: #4A3528;
+  --hair: #3D2B20;
+  --rule: #F1DCC8;
+  --text: #F6E9DC;
+  --dim: #C2A58F;
+  --accent: #FF8A4C;
+  --accent2: #E8A070;
+  --on-accent: #1A120E;
+  --ok: #6FD39A;
+  --warn: #F2C45E;
+  --fail: #FF6B6B;
+  --info: #6AB8F0;
+  --ok-soft: color-mix(in srgb, var(--ok) 12%, var(--panel));
+  --warn-soft: color-mix(in srgb, var(--warn) 12%, var(--panel));
+  --fail-soft: color-mix(in srgb, var(--fail) 12%, var(--panel));
+  --info-soft: color-mix(in srgb, var(--info) 12%, var(--panel));
+  --focus: var(--info);
+  --sel-bg: #FF8A4C;
+  --sel-ink: #1A120E;
+  --head: #FF7AC6;
+  --high: #FF9F5A;
+  --low: #C8D86A;
+  --red: #FF6B6B;
+  --chart-1: #FF8A4C;
+  --chart-2: #FF7AC6;
+  --chart-3: #6AB8F0;
+  --chart-4: #F2C45E;
+  --chart-5: #6FD39A;
+  --chart-6: #B48CFF;
+  --map-water: #3A2A20;
+}
+/* style-guide theme "high-contrast" 1.0.1 (STANDARD 1.4.1). WCAG 2.2 AAA contrast (7:1 text, 3:1 UI). Light, then dark twice (system and explicit), then forced-colors. */
+:root[data-preset="high-contrast"], .preset-preview[data-preset="high-contrast"] {
+  color-scheme: light;
+  --font-sans: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  --font-head: var(--font-sans);
+  --font-mono: "IBM Plex Mono","Cascadia Mono",Consolas,monospace;
+  --radius: 0;
+  --rule-w: 3px;
+  --h-case: none;
+  --h-track: 0;
+  --h-weight: 800;
+  --eyebrow-track: .08em;
+  --body-size: 16px;
+  --label-size: 12px;
+  --label-size-lg: 13px;
+  --h1-size: 26px;
+  --h2-size: 19px;
+  --h3-size: 16px;
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --panel2: #f0f0f0;
+  --border: #000000;
+  --hair: #595959;
+  --rule: #000000;
+  --text: #000000;
+  --dim: #2e2e2e;
+  --accent: #00338d;
+  --accent2: #4d4d4d;
+  --on-accent: #ffffff;
+  --ok: #0b5a1c;
+  --warn: #6a4000;
+  --fail: #990000;
+  --info: #00428f;
+  --ok-soft: color-mix(in srgb, var(--ok) 10%, var(--panel));
+  --warn-soft: color-mix(in srgb, var(--warn) 10%, var(--panel));
+  --fail-soft: color-mix(in srgb, var(--fail) 10%, var(--panel));
+  --info-soft: color-mix(in srgb, var(--info) 10%, var(--panel));
+  --focus: #0000cc;
+  --sel-bg: #000000;
+  --sel-ink: #ffffff;
+  --head: #00338d;
+  --high: #8a2e00;
+  --low: #4d5200;
+  --red: #990000;
+  --chart-1: #000000;
+  --chart-2: #00428f;
+  --chart-3: #6a4000;
+  --chart-4: #0b5a1c;
+  --chart-5: #4d4d4d;
+  --chart-6: #8a2e00;
+  --map-water: #4f86bf;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-preset="high-contrast"]:not([data-theme="light"]), :root:not([data-theme="light"]) .preset-preview[data-preset="high-contrast"] {
+      color-scheme: dark;
+      --bg: #000000;
+      --panel: #000000;
+      --panel2: #1a1a1a;
+      --border: #ffffff;
+      --hair: #bfbfbf;
+      --rule: #ffffff;
+      --text: #ffffff;
+      --dim: #e0e0e0;
+      --accent: #9cc8ff;
+      --accent2: #cccccc;
+      --on-accent: #000000;
+      --ok: #6df08a;
+      --warn: #ffd24d;
+      --fail: #ff9a90;
+      --info: #8ec5ff;
+      --ok-soft: color-mix(in srgb, var(--ok) 10%, var(--panel));
+      --warn-soft: color-mix(in srgb, var(--warn) 10%, var(--panel));
+      --fail-soft: color-mix(in srgb, var(--fail) 10%, var(--panel));
+      --info-soft: color-mix(in srgb, var(--info) 10%, var(--panel));
+      --focus: #ffff00;
+      --sel-bg: #ffffff;
+      --sel-ink: #000000;
+      --head: #9cc8ff;
+      --high: #ffa45c;
+      --low: #d9e36a;
+      --red: #ff9a90;
+      --chart-1: #ffffff;
+      --chart-2: #8ec5ff;
+      --chart-3: #ffd24d;
+      --chart-4: #6df08a;
+      --chart-5: #cccccc;
+      --chart-6: #ffa45c;
+      --map-water: #6ea8d8;
+  }
+}
+:root[data-preset="high-contrast"][data-theme="dark"], :root[data-theme="dark"] .preset-preview[data-preset="high-contrast"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --panel: #000000;
+  --panel2: #1a1a1a;
+  --border: #ffffff;
+  --hair: #bfbfbf;
+  --rule: #ffffff;
+  --text: #ffffff;
+  --dim: #e0e0e0;
+  --accent: #9cc8ff;
+  --accent2: #cccccc;
+  --on-accent: #000000;
+  --ok: #6df08a;
+  --warn: #ffd24d;
+  --fail: #ff9a90;
+  --info: #8ec5ff;
+  --ok-soft: color-mix(in srgb, var(--ok) 10%, var(--panel));
+  --warn-soft: color-mix(in srgb, var(--warn) 10%, var(--panel));
+  --fail-soft: color-mix(in srgb, var(--fail) 10%, var(--panel));
+  --info-soft: color-mix(in srgb, var(--info) 10%, var(--panel));
+  --focus: #ffff00;
+  --sel-bg: #ffffff;
+  --sel-ink: #000000;
+  --head: #9cc8ff;
+  --high: #ffa45c;
+  --low: #d9e36a;
+  --red: #ff9a90;
+  --chart-1: #ffffff;
+  --chart-2: #8ec5ff;
+  --chart-3: #ffd24d;
+  --chart-4: #6df08a;
+  --chart-5: #cccccc;
+  --chart-6: #ffa45c;
+  --map-water: #6ea8d8;
+}
+/* Windows Contrast themes, forced-colors: the browser repaints HTML with the user's own palette, so HTML keeps its tokens.
+   What it does not repaint is SVG fill and stroke, so the tokens map to system colours inside svg only. Two causes make
+   a mapping on :root wrong (STANDARD.md section 8.2): it loses to the dark blocks above (more specific selectors), and a
+   kept system-colour fill carrying Canvas text shows Chrome's text plate as a solid bar. A rule on the svg element itself
+   beats the value inherited from :root whatever the specificity. Status is never colour alone: keep the glyph or the word. */
+@media (forced-colors: active) {
+  :root[data-preset="high-contrast"] svg, .preset-preview[data-preset="high-contrast"] svg {
+    --bg: Canvas;
+    --panel: Canvas;
+    --panel2: Canvas;
+    --border: CanvasText;
+    --hair: GrayText;
+    --rule: CanvasText;
+    --text: CanvasText;
+    --dim: CanvasText;
+    --accent: LinkText;
+    --accent2: GrayText;
+    --on-accent: Canvas;
+    --ok: CanvasText;
+    --warn: CanvasText;
+    --fail: CanvasText;
+    --info: LinkText;
+    --ok-soft: Canvas;
+    --warn-soft: Canvas;
+    --fail-soft: Canvas;
+    --info-soft: Canvas;
+    --focus: Highlight;
+    --sel-bg: Highlight;
+    --sel-ink: HighlightText;
+    --head: CanvasText;
+    --chart-1: CanvasText;
+    --chart-2: LinkText;
+    --chart-3: Highlight;
+    --chart-4: VisitedText;
+    --chart-5: GrayText;
+    --chart-6: ButtonText;
+    --map-water: Canvas;
+  }
+}
+/* style-guide theme "high-contrast" 1.0.1: the few rules the tokens cannot express (STANDARD.md sections 8.1, 8.2). */
+:root[data-preset="high-contrast"] :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+:root[data-preset="high-contrast"] :is(button, input, select, textarea) { border: var(--rule-w) solid var(--border); }
+@media (forced-colors: active) {
+  :root[data-preset="high-contrast"] :focus-visible { outline: 3px solid Highlight; outline-offset: 2px; }
+  :root[data-preset="high-contrast"] :is(button, input, select, textarea) { border: 2px solid ButtonText; }
+  /* Selected or pressed controls whose fill is the only sign take the selection colours; only on these small elements. */
+  :root[data-preset="high-contrast"] :is(button.active, button.on, button[aria-pressed="true"], [role="tab"][aria-selected="true"]) {
+    forced-color-adjust: none; background: Highlight; color: HighlightText; border-color: Highlight;
+  }
+  :root[data-preset="high-contrast"] :is(button.active, button.on, button[aria-pressed="true"], [role="tab"][aria-selected="true"]) * { color: inherit; }
+}

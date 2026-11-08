@@ -1,0 +1,83 @@
+{
+  "style_guide": "1.7.0",
+  "catalogue_version": "1.4.1",
+  "choices": [
+    {
+      "id": "system",
+      "label": "System (Helvetica, Arial)",
+      "stack": "\"Helvetica Neue\",Helvetica,Arial,sans-serif",
+      "roles": [
+        "head",
+        "body"
+      ]
+    },
+    {
+      "id": "archivo",
+      "label": "Archivo",
+      "stack": "\"Archivo\",\"Helvetica Neue\",Helvetica,Arial,sans-serif",
+      "roles": [
+        "head",
+        "body"
+      ]
+    },
+    {
+      "id": "plex-sans",
+      "label": "IBM Plex Sans",
+      "stack": "\"IBM Plex Sans\",system-ui,-apple-system,\"Segoe UI\",Roboto,sans-serif",
+      "roles": [
+        "head",
+        "body"
+      ]
+    },
+    {
+      "id": "barlow-condensed",
+      "label": "Barlow Condensed",
+      "stack": "\"Barlow Condensed\",\"Arial Narrow\",Arial,sans-serif",
+      "roles": [
+        "head"
+      ]
+    }
+  ],
+  "sizes": {
+    "label": {
+      "min": 9,
+      "max": 13,
+      "unit": "px",
+      "tokens": [
+        "--label-size",
+        "--label-size-lg"
+      ]
+    },
+    "text": {
+      "min": 13,
+      "max": 16,
+      "unit": "px",
+      "tokens": [
+        "--body-size"
+      ]
+    }
+  },
+  "headings": [
+    {
+      "id": "compact",
+      "label": "Compact",
+      "h1": 20,
+      "h2": 15,
+      "h3": 12
+    },
+    {
+      "id": "regular",
+      "label": "Regular",
+      "h1": 22,
+      "h2": 16,
+      "h3": 13
+    },
+    {
+      "id": "large",
+      "label": "Large",
+      "h1": 26,
+      "h2": 19,
+      "h3": 15
+    }
+  ]
+}

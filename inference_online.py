@@ -15,6 +15,7 @@ import multiprocessing as mp
 import signal
 import sys
 import warnings
+from pathlib import Path
 
 warnings.filterwarnings("ignore", category=FutureWarning, module="diffusers")
 warnings.filterwarnings("ignore", category=FutureWarning, module="transformers")
@@ -50,6 +51,7 @@ def main(argv=None) -> int:
     import torch
     import uvicorn
 
+    from webcam.preferences import PreferenceStore, default_path
     from webcam.server import build_app
 
     mp.set_start_method("spawn", force=True)
@@ -61,7 +63,8 @@ def main(argv=None) -> int:
     pipeline = Pipeline(config, device)
 
     guard = security.AccessGuard(key)
-    app = build_app(config, pipeline, guard, secure)
+    prefs = PreferenceStore(Path(config.prefs_file) if config.prefs_file else default_path())
+    app = build_app(config, pipeline, guard, secure, prefs)
 
     def stop(signum, frame):
         print(f"\nReceived signal {signum}, shutting down...")

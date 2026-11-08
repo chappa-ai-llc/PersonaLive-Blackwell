@@ -5,6 +5,29 @@ All notable changes to this fork. Format: [Keep a Changelog](https://keepachange
 
 ## [Unreleased]
 
+**Config changes:** none needed. The new `--prefs-file` option (`PERSONALIVE_PREFS_FILE`) has a default:
+`personalive/preferences.json` under `~/.config` on Linux or `%APPDATA%` on Windows.
+
+### Added
+
+- The webcam page takes the shared chappa.ai style guide (1.7.0): five themes (Modernist, Flight manual, Aurora,
+  Ember, High contrast), light, dark or system, UI scale 80% to 200%, and heading font, body font, text, heading and
+  label size. A menu in the upper right holds Preferences and Sign out (#5).
+- `GET` and `PUT /api/preferences`: the appearance is saved on the server, in `--prefs-file` (mode 600), and checked
+  against the themes and fonts the page ships; anything else is refused with 400.
+- Automatic theme: High contrast when the system asks for more contrast (`prefers-contrast: more`), else Modernist.
+  Windows contrast themes keep their own colours.
+- `tools/check_style.py`: checks the vendored themes and fonts against their SHA-256 list and runs the style guide's
+  contrast audit on every theme.
+
+### Security
+
+- The CSP adds `font-src 'self'` for the bundled fonts; the page still loads nothing from other sites.
+
+### Fixed
+
+- The empty portrait tile drew a broken-image box: a CSS `display` rule overrode the `hidden` attribute.
+
 ## [0.1.0] - 2026-11-08
 
 The first tagged release: a security sweep after the BUILD office's scan found 373 advisories and 320 Dependabot

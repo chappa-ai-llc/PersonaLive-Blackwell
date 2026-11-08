@@ -178,6 +178,7 @@ CSP = "; ".join([
     "default-src 'none'",
     "script-src 'self'",
     "style-src 'self'",
+    "font-src 'self'",
     "img-src 'self' blob: data:",
     "media-src 'self' blob: mediastream:",
     "connect-src 'self'",

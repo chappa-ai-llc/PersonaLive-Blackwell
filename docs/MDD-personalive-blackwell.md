@@ -1,8 +1,8 @@
 # PersonaLive-Blackwell — Master Design Document
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Status:** Active
 **Owner:** chappa.ai LLC
-**As of:** 2026-11-08, code release 0.1.0 (main `32deec5`)
+**As of:** 2026-11-08, code release 0.1.0 plus Unreleased
 
 ## --help
 **Document Type:** Master Design Document
@@ -83,7 +83,10 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 | `webcam/security.py` | `AccessGuard` (key, sessions, lockout), `SecurityHeadersMiddleware`, `same_origin`, `decode_image`, `load_access_key`. No GPU or model imports. |
 | `webcam/connection_manager.py` | Per-session WebSocket and queues; refuses sessions past `--max-queue-size`. |
 | `webcam/vid2vid.py`, `vid2vid_trt.py` | The pipeline process: fuse the reference, then turn webcam frames into animated frames (`src/wrapper.py` / `src/wrapper_trt.py`, class `PersonaLive`). |
-| `webcam/static/` | The page: `index.html`, `app.js`, `app.css`. Plain files, no build step, no third-party code. |
+| `webcam/preferences.py` | `PreferenceStore`: the page's appearance (theme, mode, scale, type), validated against the vendored style files and saved atomically to `--prefs-file`. |
+| `webcam/static/` | The page: `index.html`, `app.js` (sign-in, camera, stream), `appearance.js` (paints the cached look before the page shows), `preferences.js` (profile menu, Preferences dialog), `app.css`. Plain files, no build step, no third-party code. |
+| `webcam/static/style/` | Vendored from `chappa-ai-llc/style-guide` by `sg.py vendor`: `themes.css`, `fonts/` (woff2 and OFL licences), `type.json`, `vendor.json` (versions and SHA-256). Never edited by hand. |
+| `tools/check_style.py` | Checks `webcam/static/style/` against `vendor.json`, and runs the style guide's `audit-css` on each theme. |
 | `src/models/`, `src/pipelines/`, `src/scheduler/` | Model code from upstream (UNet 2D/3D, motion module, pose guider, motion encoder, DDIM scheduler). |
 | `src/liveportrait/` | LivePortrait motion extractor (keypoints), used for face boxes and motion. |
 | `src/modeling/` | TensorRT engine wrapper and ONNX export helpers. |
@@ -101,12 +104,14 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 | `POST /api/logout` | none | closes the session |
 | `GET /api/settings` | none | frame size and queue limit for the page |
 | `GET /api/queue` | none | number of connected sessions |
+| `GET /api/preferences` | none | the appearance, `{"theme", "mode", "scale", "type": {"head", "body", "label", "heading", "text"}}` (§6.4) |
+| `PUT /api/preferences` | JSON with only the fields that change, at most 4096 bytes, same Origin | the stored object; `400` with the reason for an unknown field or value |
 | `POST /api/upload_reference_image` | multipart, field `ref_image`: JPEG, PNG or WebP, at most 10 MB and 4096 px a side | fuses the reference |
 | `GET /` | none | the static page |
 
 §5.2 **WebSocket** `GET /api/ws/{user_id}` (`user_id` is a UUID). Needs the same Origin and a valid session, else it closes with code 1008. Client to server: binary messages are webcam frames (JPEG, at most 2 MB); text messages are JSON `{"status": "pause"}` or `{"status": "resume"}`. Server to client: JSON status messages (`connected`, `send_frame`, `error`) and binary JPEG output frames.
 
-§5.3 **CLI** (`webcam/config.py`; the README table is the user-facing copy). `--host` (`HOST`, default `127.0.0.1`), `--port` (`PORT`, `7860`), `--access-key-file` (`PERSONALIVE_ACCESS_KEY_FILE`), `--ssl-certfile` / `--ssl-keyfile` (`SSL_CERTFILE` / `SSL_KEYFILE`), `--max-queue-size` (`MAX_QUEUE_SIZE`, `1`), `--acceleration` (`ACCELERATION`: `none`, `tensorrt` or `xformers`). `launcher.py` takes `--gpu N` and passes everything else through.
+§5.3 **CLI** (`webcam/config.py`; the README table is the user-facing copy). `--host` (`HOST`, default `127.0.0.1`), `--port` (`PORT`, `7860`), `--access-key-file` (`PERSONALIVE_ACCESS_KEY_FILE`), `--ssl-certfile` / `--ssl-keyfile` (`SSL_CERTFILE` / `SSL_KEYFILE`), `--max-queue-size` (`MAX_QUEUE_SIZE`, `1`), `--prefs-file` (`PERSONALIVE_PREFS_FILE`, default `personalive/preferences.json` under `~/.config` or `%APPDATA%`), `--acceleration` (`ACCELERATION`: `none`, `tensorrt` or `xformers`). `launcher.py` takes `--gpu N` and passes everything else through.
 
 ## §6 — Data Models
 
@@ -115,6 +120,8 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 §6.2 **Weights.** Under `pretrained_weights/` (git-ignored), from three Hugging Face repos: `huaichang/PersonaLive`, `lambdalabs/sd-image-variations-diffusers` and `stabilityai/sd-vae-ft-mse`. `tools/weights.lock.json` maps each repo to a commit `revision` and each file to a SHA-256 (all `null` today: §10).
 
 §6.3 **Dependencies.** `pyproject.toml` lists the direct dependencies, with floors at the first release that fixed every known advisory, and transitive floors under `[tool.uv] constraint-dependencies`. `requirements.txt` is the full uv lock with hashes, for Linux x86_64, Linux aarch64 and Windows x86_64. The filename must stay `requirements*.txt` so dep-audit and Dependabot read it.
+
+§6.4 **Appearance preference.** One record, because the server has one user (the access key holder). `theme` is `auto` or a theme id in `webcam/static/style/vendor.json`; `auto` means High contrast when `prefers-contrast: more` matches, else Modernist. `mode` is `system`, `light` or `dark`. `scale` is one of 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2 (CSS `zoom` on `<html>`, with `--zoom` for viewport lengths). `type.head` and `type.body` are `theme` or a font id from `type.json` allowed for that role; `type.heading` is `theme` or `compact`, `regular`, `large`; `type.label` (9 to 13) and `type.text` (13 to 16) are pixel sizes, 0 for the theme's own. The page caches the record and the resolved type properties in `localStorage` (`personalive.appearance`) for first paint only. A field in the file that is no longer valid falls back to its default on load.
 
 ## §7 — Security & Compliance
 
@@ -126,7 +133,7 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 - §7.2.a Listens on 127.0.0.1 by default. Any other address needs TLS, or the server refuses to start. TLS 1.2 is limited to forward-secret AEAD suites (`ECDHE+AESGCM:ECDHE+CHACHA20`). Decided: board card X-03.
 - §7.2.b The access key is always needed: new for each run (printed once, kept in memory), or read from a file of at least 32 characters that other users cannot read (the `*_FILE` convention). Ten wrong keys in a minute lock that client out for the rest of the minute.
 - §7.2.c Same origin only: no CORS, and `Origin` is checked on sign-in, uploads and the WebSocket.
-- §7.2.d Security headers on every response: a strict CSP (`script-src 'self'`), `frame-ancestors 'none'`, `nosniff`, `Referrer-Policy: same-origin`, a Permissions-Policy, and HSTS over TLS. No `Server` header, no OpenAPI or docs routes.
+- §7.2.d Security headers on every response: a strict CSP (`script-src 'self'`, `style-src 'self'`, `font-src 'self'`), `frame-ancestors 'none'`, `nosniff`, `Referrer-Policy: same-origin`, a Permissions-Policy, and HSTS over TLS. No `Server` header, no OpenAPI or docs routes.
 - §7.2.e Bounded image decoding: format allow-list, byte and pixel limits, headers checked before pixels are decoded.
 - §7.2.f Every checkpoint is loaded with `torch.load(..., weights_only=True)`. Weights are downloaded at pinned commits with SHA-256 checks.
 - §7.2.g Full hash lock, no npm, Dependabot on, and the office's dep-audit runs hourly. No installed package is patched in place (the old `apply_patches.py` was removed).
@@ -139,19 +146,21 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 
 §8.1 **Install and run.** As in the README: `pip install --require-hashes -r requirements.txt`, `python tools/download_weights.py`, `python launcher.py`. Needs Python 3.12 or later, a CUDA 13 driver and `ffmpeg`.
 
-§8.2 **No Swarm deployment.** This is a desktop or Spark tool. Nothing runs on the lab Swarm, and nothing is stored outside the repo folder.
+§8.2 **No Swarm deployment.** This is a desktop or Spark tool. Nothing runs on the lab Swarm. Outside the repo folder the server writes only the appearance preference (`--prefs-file`, §6.4).
 
-§8.3 **Release.** Agents release (global rules). Update `CHANGELOG.md`, then tag `vX.Y.Z` on main (annotated), push the tag, and publish a GitHub release whose notes are that CHANGELOG section (`gh release create`). There are no build artifacts: users install from the tagged source. No GitHub Actions.
+§8.3 **Release.** Agents release (global rules). Run the checks in §9.1 and §9.4, update `CHANGELOG.md`, then tag `vX.Y.Z` on main (annotated), push the tag, and publish a GitHub release whose notes are that CHANGELOG section (`gh release create`). There are no build artifacts: users install from the tagged source. No GitHub Actions.
 
 §8.4 **Changing a dependency.** Edit `pyproject.toml`, run `tools/lock.sh`, then run both checks in §9.
 
 ## §9 — Testing Strategy
 
-§9.1 `python -m unittest discover -s tests -v`: the webcam server's security tests (`tests/test_security.py`, through the in-process ASGI client `tests/asgi_client.py`, with a stand-in pipeline). 34 tests at 0.1.0. They need no GPU.
+§9.1 `python -m unittest discover -s tests -v`: the webcam server's tests, through the in-process ASGI client `tests/asgi_client.py` with a stand-in pipeline. `tests/test_security.py` covers the security controls (34 tests); `tests/test_appearance.py` covers the preference API, the vendored style files, bare viewport units, external loads and colours in `app.css` (16 tests). They need no GPU.
 
 §9.2 `python tools/smoke_random_weights.py <out-dir>`: the whole online pipeline on CPU with random weights (a few minutes, about 8 GB of disk). Run it after every dependency change.
 
 §9.3 **Not automated:** GPU runs, the TensorRT build, real-weight output quality (#4).
+
+§9.4 `python tools/check_style.py --style-guide <clone of chappa-ai-llc/style-guide>`: the vendored files match `vendor.json`, and `sg.py audit-css` passes for every theme (`--aaa` for High contrast). `--integrity-only` skips the audit when no clone is at hand.
 
 ## §10 — Known Issues & Technical Debt
 
@@ -183,4 +192,5 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 
 | Version | Date | Change |
 |---|---|---|
+| 1.1.0 | 2026-11-08 | Appearance (#5): `webcam/preferences.py`, the preference API (§5.1, §6.4), vendored style files, `tools/check_style.py` (§9.4), `font-src 'self'`, §8.2 corrected (the server now writes one file outside the repo). |
 | 1.0.0 | 2026-11-08 | First MDD, written from the README, SECURITY.md and the code at 0.1.0. Replaces `docs/build-kickoff.md`. |

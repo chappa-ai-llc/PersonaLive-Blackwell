@@ -9,6 +9,8 @@ Routes (all /api routes except POST /api/session need a session cookie):
   POST /api/logout                 close it
   GET  /api/settings               frame size and queue limit for the page
   GET  /api/queue                  how many sessions are connected
+  GET  /api/preferences            the page's appearance (webcam/preferences.py)
+  PUT  /api/preferences            change some of it; answers the stored object
   POST /api/upload_reference_image the reference portrait (multipart, field ref_image)
   WS   /api/ws/{user_id}           webcam frames in, animated frames out
   GET  /                           the page (webcam/static/)
@@ -29,7 +31,7 @@ from fastapi import FastAPI, HTTPException, Request, Response, WebSocket, WebSoc
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from webcam import security
+from webcam import preferences, security
 from webcam.connection_manager import ConnectionManager, ServerFullException
 from webcam.util import pil_to_frame
 
@@ -37,6 +39,7 @@ STATIC_DIR = Path(__file__).resolve().parent / "static"
 FRAME_SIZE = (512, 512)
 THROTTLE = 0.001
 MAX_SESSION_BODY = 4096
+MAX_PREFS_BODY = 4096
 
 
 def frame_to_tensor(img):
@@ -49,8 +52,11 @@ def frame_to_tensor(img):
     return torch.from_numpy(np.array(img, dtype=np.uint8))
 
 
-def build_app(config, pipeline, guard: security.AccessGuard, secure: bool) -> FastAPI:
-    """Return the FastAPI app. `secure` is True when the server speaks TLS."""
+def build_app(config, pipeline, guard: security.AccessGuard, secure: bool,
+              prefs: preferences.PreferenceStore | None = None) -> FastAPI:
+    """Return the FastAPI app. `secure` is True when the server speaks TLS.
+    Without `prefs` the appearance is kept in memory only."""
+    prefs = prefs or preferences.PreferenceStore(None)
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
     app.add_middleware(security.SecurityHeadersMiddleware, secure=secure)
     conn_manager = ConnectionManager()
@@ -111,6 +117,33 @@ def build_app(config, pipeline, guard: security.AccessGuard, secure: bool) -> Fa
     async def queue_size(request: Request):
         session_of(request)
         return JSONResponse({"queue_size": conn_manager.get_user_count()})
+
+    @app.get("/api/preferences")
+    async def get_preferences(request: Request):
+        session_of(request)
+        return JSONResponse(prefs.get())
+
+    @app.put("/api/preferences")
+    async def put_preferences(request: Request):
+        check_origin(request)
+        session_of(request)
+        body = b""
+        async for chunk in request.stream():
+            body += chunk
+            if len(body) > MAX_PREFS_BODY:
+                raise HTTPException(status_code=413, detail="Request too large")
+        try:
+            change = json.loads(body)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Send a JSON object") from None
+        try:
+            stored = await asyncio.to_thread(prefs.update, change)
+        except preferences.PreferenceError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from None
+        except OSError:
+            logging.exception("Could not save the preferences")
+            raise HTTPException(status_code=500, detail="Could not save the preferences") from None
+        return JSONResponse(stored)
 
     @app.post("/api/upload_reference_image")
     async def upload_reference_image(request: Request):

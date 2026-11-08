@@ -18,7 +18,9 @@ public issue. Problems in the model itself belong upstream at
   in `pyproject.toml` is the first release that fixed every advisory known for that package, and the transitive
   floors under `[tool.uv] constraint-dependencies` stop a resolver from going below them.
 - **No npm.** The web page is plain HTML, CSS and JavaScript in `webcam/static/`, with no build step and no
-  third-party code. The SvelteKit front end and its npm tree were removed in 0.1.0.
+  third-party code. The SvelteKit front end and its npm tree were removed in 0.1.0. The themes and fonts in
+  `webcam/static/style/` are vendored from the chappa.ai style guide with a SHA-256 for each file, which
+  `tests/test_appearance.py` and `tools/check_style.py` check; the fonts are served by this server (`font-src 'self'`).
 - **Fewer packages.** Removed in 0.1.0 because nothing needed them, or because they could not be made safe:
   MediaPipe (its face-mesh API needs protobuf 4, which has advisories), decord (unmaintained), scikit-image, markdown2,
   accelerate (an advisory with no fix), xFormers (no build for the current PyTorch), python-dotenv and the
@@ -39,7 +41,7 @@ public issue. Problems in the model itself belong upstream at
 
 ## Webcam server
 
-`inference_online.py` (code in `webcam/server.py` and `webcam/security.py`, tests in `tests/test_security.py`):
+`inference_online.py` (code in `webcam/server.py`, `webcam/security.py` and `webcam/preferences.py`, tests in `tests/test_security.py` and `tests/test_appearance.py`):
 
 - **Listens on 127.0.0.1 by default.** Any other address needs TLS (`--ssl-certfile`, `--ssl-keyfile`), or the server
   refuses to start. TLS 1.2 uses forward-secret AEAD suites only.
@@ -48,13 +50,15 @@ public issue. Problems in the model itself belong upstream at
   `PERSONALIVE_ACCESS_KEY_FILE`, a file that must be at least 32 characters and not readable by other users. Sessions
   are HttpOnly, SameSite=Strict cookies that last 12 hours. Ten wrong keys in a minute lock that client out for the
   rest of the minute.
-- **Same origin only.** No CORS. Sign-in, uploads and the WebSocket check the `Origin` header against the server's own
-  address.
+- **Same origin only.** No CORS. Sign-in, sign-out, uploads, saving the appearance and the WebSocket check the
+  `Origin` header against the server's own address.
 - **Security headers** on every response: a Content-Security-Policy that allows only the server's own files,
   `frame-ancestors 'none'`, `nosniff`, `Referrer-Policy: same-origin`, a Permissions-Policy that allows the camera and
   screen capture for this page only, and HSTS over TLS. No `Server` header and no API docs pages.
 - **Bounded input.** Reference images: JPEG, PNG or WebP, at most 10 MB and 4096 pixels a side. Webcam frames: JPEG,
   at most 2 MB. Image headers are checked before any pixel is decoded.
+- **Appearance preference.** `PUT /api/preferences` takes at most 4096 bytes and accepts only the theme, mode, scale
+  and type values the page ships (anything else is a 400). It is written atomically to `--prefs-file` with mode 600.
 - One browser session at a time by default (`--max-queue-size`).
 
 ## Not covered

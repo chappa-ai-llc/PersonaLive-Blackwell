@@ -1,0 +1,32 @@
+{
+  "style_guide": "1.7.0",
+  "themes": {
+    "modernist": "1.2.1",
+    "flight-manual": "1.1.0",
+    "aurora": "1.2.0",
+    "ember": "1.2.0",
+    "high-contrast": "1.0.1"
+  },
+  "type": true,
+  "files": {
+    "fonts/Archivo-Bold.woff2": "e289950dd907735e2d22f91b3af387fb5bf235f26dc45fb1b9133875d4b4b23d",
+    "fonts/Archivo-ExtraBold.woff2": "8cc0e60eef220aac8cbd4835928eb7bb89514f2e1458d130004a9f0283ad1c79",
+    "fonts/Archivo-Medium.woff2": "15a9502c5af2e23747c2e32bd739b1c86ed4b88d6b9f5a5dd9c57cb6625eb51b",
+    "fonts/Archivo-Regular.woff2": "b315af549bc79d980abe0bca0a648ecfa0106be1bf205bf9ed809e6381f24d0a",
+    "fonts/Archivo-SemiBold.woff2": "5eb4dd14550d2c8771c20a8907fb17f0e9bcf57aa017fbc2cf571897b23a4135",
+    "fonts/BarlowCondensed-Bold.woff2": "2a68cbc9b65c87d7805b4e912545dc8f2426f9134affc0f07bec252782bd0bd0",
+    "fonts/BarlowCondensed-Medium.woff2": "97a6103574c8f698847fd948d339efa927cc23dc847e173d7b37592c2770a68c",
+    "fonts/BarlowCondensed-SemiBold.woff2": "16a2eff3f132e6f603f3036ed99f21f5a8ddbc70ac2ccd614044c36faf292bfb",
+    "fonts/IBMPlexMono-Medium.woff2": "33faf307fa6031fb4062276d7320a6d632de890cbb347576fd80cfa01077bc25",
+    "fonts/IBMPlexMono-Regular.woff2": "ba204497f16b6d334cee9d1e963a831b73e3a56e1d6300a8489d18df7214b350",
+    "fonts/IBMPlexSans-Medium.woff2": "5660f8a658f8bb50dbc005232f885eadffd2bc1c235c4f6fbb63469d1f9cde6d",
+    "fonts/IBMPlexSans-Regular.woff2": "ba711a3085ff9f27440b6b9c4550cfc47c97bf36591d5da958b975bb3add8c1a",
+    "fonts/IBMPlexSans-SemiBold.woff2": "f78048030eab62e860efa39a0df79e2e5581bf122eb95b9bc42c0b8a4988d205",
+    "fonts/archivo-OFL.txt": "108b4e57c9c796d3d38d0428ca7ee39de47ad93187302718d9b2d8864b9b716b",
+    "fonts/barlow-condensed-OFL.txt": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f",
+    "fonts/ibm-plex-mono-OFL.txt": "37784b44044a4ffd9256702b7c0982c37e5c8887ba90c6dca0479aea93dc898d",
+    "fonts/ibm-plex-sans-OFL.txt": "37784b44044a4ffd9256702b7c0982c37e5c8887ba90c6dca0479aea93dc898d",
+    "themes.css": "6025d669de6bb17162d1dc1307de966ea6d866fa8cefba544ec140894dc1f898",
+    "type.json": "36bff721fada5ffbc4ee2133a578afbda56cbca1fd925f7cf3ee43d00fe5026a"
+  }
+}
