@@ -3,18 +3,16 @@
 # version with its SHA-256 hashes, for Linux x86_64, Linux aarch64 (DGX Spark)
 # and Windows x86_64.
 #
-# Uses uv. In a BUILD office pod, uv comes from tool-bin's pinned-bin (exact
-# bytes, SHA-256 checked); elsewhere, set UV to a uv binary you trust.
+# Uses uv: the one on PATH, or set UV to the path of a uv binary you have
+# verified (for example against the SHA-256 on its GitHub release page).
 # After running: review the diff, run the tests and tools/smoke_random_weights.py.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-if [[ -z "${UV:-}" ]]; then
-  if [[ -f /srv/tool-bin/pinned-bin/pinned_bin.py ]]; then
-    UV="$(python3 /srv/tool-bin/pinned-bin/pinned_bin.py path uv | tail -n 1)"
-  else
-    UV="$(command -v uv)"
-  fi
+UV="${UV:-$(command -v uv || true)}"
+if [[ -z "$UV" ]]; then
+  echo "lock.sh: uv not found; install it or set UV to its path" >&2
+  exit 1
 fi
 
 "$UV" lock --upgrade

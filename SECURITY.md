@@ -1,6 +1,6 @@
 # Security
 
-As of 0.1.0 (2026-11-08). This repository is public, so this page says what the code does to stay safe, what is still
+As of 0.2.1 (2026-11-09). This repository is public, so this page says what the code does to stay safe, what is still
 open, and how to report a problem.
 
 ## Reporting a vulnerability
@@ -8,6 +8,29 @@ open, and how to report a problem.
 Please use GitHub's private vulnerability reporting on this repository (Security tab, "Report a vulnerability"), not a
 public issue. Problems in the model itself belong upstream at
 [GVCLab/PersonaLive](https://github.com/GVCLab/PersonaLive).
+
+## Verifying a release
+
+Each release is an annotated tag `vX.Y.Z` on `main`, signed with the project's SSH release key. The tag message
+carries the release notes (from 0.2.1 on; `v0.1.0` and `v0.2.0` carry a one-line title, and their notes are on the
+GitHub release page and in `CHANGELOG.md`). Install from a tag you have verified, not from a branch.
+
+The release key:
+
+```text
+release@personalive-blackwell ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN/VknbhoTjqEiNNylnjGrP7pSTM0iXFph3BnWmqJ+Zg
+SHA256:wZo0qZggJ3mUGdpCZhkuUk88ZE6d8t/da3ctY1Mvt7Y
+```
+
+The same line is in `.release-signers` in this repository. To check a tag (Git 2.34 or later):
+
+```bash
+git fetch --tags
+git -c gpg.ssh.allowedSignersFile=.release-signers tag -v v0.2.1
+```
+
+A good tag prints `Good "git" signature for release@personalive-blackwell`. Compare the key's SHA256 fingerprint
+with the one on this page as published on GitHub, since a copy of the repository could carry a different key.
 
 ## Dependencies
 
