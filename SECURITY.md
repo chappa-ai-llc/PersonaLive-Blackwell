@@ -48,10 +48,11 @@ with the one on this page as published on GitHub, since a copy of the repository
   MediaPipe (its face-mesh API needs protobuf 4, which has advisories), decord (unmaintained), scikit-image, markdown2,
   accelerate (an advisory with no fix), xFormers (no build for the current PyTorch), python-dotenv and the
   `onnxruntime`, `colored` and `jax` packages.
-- **TensorRT.** NVIDIA publishes `tensorrt-cu13` and `tensorrt-cu13-libs` on PyPI only as installer packages
-  ("wheel-stub"). pip checks the installer against the hash in `requirements.txt`; the installer then downloads the
-  real wheel from `https://pypi.nvidia.com/` and checks it against the SHA-256 that index publishes. Locking those
-  wheels directly is tracked in the issues.
+- **TensorRT.** On PyPI, `tensorrt-cu13-libs` is only an installer package ("wheel-stub") that downloads the real
+  wheel at install time. So `tensorrt-cu13`, `tensorrt-cu13-libs` and `tensorrt-cu13-bindings` come from NVIDIA's
+  index, `https://pypi.nvidia.com/`, and `requirements.txt` holds the SHA-256 of the real wheels. `pyproject.toml`
+  marks that index explicit: no other package is taken from it. `requirements.txt` names both indexes; pip accepts only
+  a file whose hash is in the lock, so the PyPI stub is never installed.
 
 ## Model weights
 

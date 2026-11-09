@@ -5,6 +5,12 @@ All notable changes to this fork. Format: [Keep a Changelog](https://keepachange
 
 ## [Unreleased]
 
+### Security
+- TensorRT is locked to its real wheels. `tensorrt-cu13`, `tensorrt-cu13-libs` and `tensorrt-cu13-bindings` come from NVIDIA's index (`https://pypi.nvidia.com/`), so `requirements.txt` holds their SHA-256 instead of the PyPI installer stub's. `requirements.txt` now names both indexes (#3).
+
+### Changed
+- `regex` 2026.11.9 (from 2026.11.7), from the relock.
+
 ## [0.2.2] - 2026-11-09
 
 **Purpose:** security fix that also makes the weight download work. The base model's old Hugging Face name was taken
