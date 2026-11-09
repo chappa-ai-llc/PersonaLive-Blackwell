@@ -10,7 +10,7 @@
 
 [project]
 name = "personalive-blackwell"
-version = "0.2.0"
+version = "0.2.1"
 description = "PersonaLive live portrait animation, patched for NVIDIA Blackwell (GB10) and mixed GPUs"
 requires-python = ">=3.12"
 license = "Apache-2.0"

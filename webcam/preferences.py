@@ -1,6 +1,6 @@
 """The page's appearance preference: theme, light or dark, UI scale and type.
 
-The shape follows the chappa.ai style guide (STANDARD.md sections 5 and 5.1):
+The shape follows the style guide vendored in webcam/static/style/ (see vendor.json):
 
     {"theme": "auto", "mode": "system", "scale": 1,
      "type": {"head": "theme", "body": "theme", "label": 0, "heading": "theme", "text": 0}}

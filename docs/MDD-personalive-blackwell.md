@@ -1,8 +1,8 @@
 # PersonaLive-Blackwell — Master Design Document
-**Version:** 1.1.2
+**Version:** 1.2.0
 **Status:** Active
 **Owner:** chappa.ai LLC
-**As of:** 2026-11-08, code release 0.2.0
+**As of:** 2026-11-09, code release 0.2.1
 
 ## --help
 **Document Type:** Master Design Document
@@ -91,7 +91,8 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 | `src/liveportrait/` | LivePortrait motion extractor (keypoints), used for face boxes and motion. |
 | `src/modeling/` | TensorRT engine wrapper and ONNX export helpers. |
 | `tools/download_weights.py` | Pinned, hash-checked weight download; `--pin` records pins (maintainers). |
-| `tools/lock.sh` | Regenerates `requirements.txt` with uv (from the pinned tool-bin binary). |
+| `tools/lock.sh` | Regenerates `requirements.txt` with uv (from `PATH`, or the binary named in `UV`; agents set `UV` to the pinned uv). |
+| `tools/release.sh` | Checks, then makes the signed release tag with the version's notes as its message (§8.3). |
 | `tools/smoke_random_weights.py` | The whole online pipeline on CPU with random weights. |
 
 ## §5 — API & Interface Contracts
@@ -148,7 +149,7 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 
 §8.2 **No Swarm deployment.** This is a desktop or Spark tool. Nothing runs on the lab Swarm. Outside the repo folder the server writes only the appearance preference (`--prefs-file`, §6.4).
 
-§8.3 **Release.** Agents release (global rules). Run the checks in §9.1 and §9.4, update `CHANGELOG.md`, then tag `vX.Y.Z` on main (annotated), push the tag, and publish a GitHub release whose notes are that CHANGELOG section (`gh release create`). There are no build artifacts: users install from the tagged source. No GitHub Actions.
+§8.3 **Release.** Agents release (global rules). Add the version's section to `CHANGELOG.md`, opening with a `**Purpose:**` line written for a stranger (the repo is public: no internal systems, hosts or tools named), and set `version` in `pyproject.toml`. Merge to main and push, then run `tools/release.sh X.Y.Z`: it checks main, the version and the section, runs the tests and the style integrity check, and makes the signed tag with the section as its message. Push the tag as a command of its own. The GitHub release page carries the same notes. There are no build artifacts: users install from the tagged source, and `SECURITY.md` ("Verifying a release") tells them how to check the signature. No GitHub Actions.
 
 §8.4 **Changing a dependency.** Edit `pyproject.toml`, run `tools/lock.sh`, then run both checks in §9.
 
@@ -192,6 +193,7 @@ The BUILD board timeline is the live view (https://build.chappa.ai/p/personalive
 
 | Version | Date | Change |
 |---|---|---|
+| 1.2.0 | 2026-11-09 | §8.3: purpose line, `tools/release.sh`, tag message carries the notes, public wording. §6 tools table: `release.sh`, `lock.sh` takes `UV`. |
 | 1.1.2 | 2026-11-08 | §11.2.f: the venv rebuild when `uv` is missing, and pip's temp folder off the 8 GB `/scratch`. |
 | 1.1.1 | 2026-11-08 | §11.2.a: the repo being public is the owner's decision (D-01). |
 | 1.1.0 | 2026-11-08 | Appearance (#5): `webcam/preferences.py`, the preference API (§5.1, §6.4), vendored style files, `tools/check_style.py` (§9.4), `font-src 'self'`, §8.2 corrected (the server now writes one file outside the repo). |

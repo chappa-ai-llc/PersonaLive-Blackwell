@@ -5,7 +5,28 @@ All notable changes to this fork. Format: [Keep a Changelog](https://keepachange
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-09
+
+**Purpose:** documentation only. Each release now states what it is for, and anyone can check that a release tag was
+signed by this project. No code or dependency changes.
+
+**Config changes:** none.
+
+### Added
+
+- `SECURITY.md`, "Verifying a release": the release key, its fingerprint, and how to check a tag with `git tag -v`.
+- `.release-signers`: the release key in Git's allowed-signers format.
+- `tools/release.sh`: runs the checks, then makes the signed tag with that version's notes as the tag message.
+
+### Changed
+
+- `tools/lock.sh` takes `uv` from `PATH` or from `UV`, and stops with a clear message when neither is set.
+- The 0.1.0 and 0.2.0 notes below now open with a purpose statement.
+
 ## [0.2.0] - 2026-11-08
+
+**Purpose:** lets you choose how the webcam page looks (theme, light or dark, UI scale and fonts). The server saves the
+choice in a file on your own machine. The animation pipeline and its dependencies are unchanged.
 
 **Config changes:** none needed. The new `--prefs-file` option (`PERSONALIVE_PREFS_FILE`) has a default:
 `personalive/preferences.json` under `~/.config` on Linux or `%APPDATA%` on Windows.
@@ -32,8 +53,8 @@ All notable changes to this fork. Format: [Keep a Changelog](https://keepachange
 
 ## [0.1.0] - 2026-11-08
 
-The first tagged release: a security sweep after the BUILD office's scan found 373 advisories and 320 Dependabot
-alerts in the four dependency files.
+**Purpose:** the first tagged release of this fork: a security sweep after a dependency scan found 373 known advisories and 320 Dependabot
+alerts in the four dependency files inherited from upstream.
 
 **Config changes:** install from the new lock with `pip install --require-hashes -r requirements.txt` in a fresh
 Python 3.12+ environment; `requirements_base.txt` and `requirements_trt.txt` are gone. The webcam server now listens
@@ -73,4 +94,4 @@ older checkout: it overwrites installed PyTorch files.
 - `tools/smoke_random_weights.py`: runs the whole online pipeline on CPU with random weights, to check a dependency
   upgrade without a GPU or the real weights.
 - `SECURITY.md`.
-- `docs/MDD-personalive-blackwell.md`, the design document (replaces the office kick-off brief).
+- `docs/MDD-personalive-blackwell.md`, the design document.
