@@ -1,30 +1,30 @@
 {
   "huaichang/PersonaLive": {
     "files": {
-      "pretrained_weights/personalive/denoising_unet.pth": null,
-      "pretrained_weights/personalive/motion_encoder.pth": null,
-      "pretrained_weights/personalive/motion_extractor.pth": null,
-      "pretrained_weights/personalive/pose_guider.pth": null,
-      "pretrained_weights/personalive/reference_unet.pth": null,
-      "pretrained_weights/personalive/temporal_module.pth": null
+      "pretrained_weights/personalive/denoising_unet.pth": "d0446c4d2387f259d5f3c1ac54a5aefa93400f4672f942856bff2538df046162",
+      "pretrained_weights/personalive/motion_encoder.pth": "ff7c6b0a84cd750046e7687f7a6f6bbc21317055bfcacef950ed347debae4d2c",
+      "pretrained_weights/personalive/motion_extractor.pth": "251e6a94ad667a1d0c69526d292677165110ef7f0cf0f6d199f0e414e8aa0ca5",
+      "pretrained_weights/personalive/pose_guider.pth": "8b997db63343a6a5d489778172d9544bcccaf27e6756505dc6353d84e877269d",
+      "pretrained_weights/personalive/reference_unet.pth": "85eb03e6c34fab69f9246ff14b3016789232e56dc4892d0581fea21a3a8480f6",
+      "pretrained_weights/personalive/temporal_module.pth": "295e8942a453adb48756432d99de103ecba9b840b5b8f6635a0687311cdff30e"
     },
-    "revision": null
+    "revision": "b247581c0361b8bee0aa7232eea6e3fdd6e38e60"
   },
-  "lambdalabs/sd-image-variations-diffusers": {
+  "lambda/sd-image-variations-diffusers": {
     "files": {
-      "image_encoder/config.json": null,
-      "image_encoder/pytorch_model.bin": null,
-      "model_index.json": null,
-      "unet/config.json": null,
-      "unet/diffusion_pytorch_model.bin": null
+      "image_encoder/config.json": "ba41139cc9dad159163a53e2aa847356b627f53fef988ad461659bd2d587d886",
+      "image_encoder/pytorch_model.bin": "89d2aa29b5fdf64f3ad4f45fb4227ea98bc45156bbae673b85be1af7783dbabb",
+      "model_index.json": "6ffc86a7bf66db58acc277a118bc3023027f6ab4ddd12f13a60639dce1024ed7",
+      "unet/config.json": "2a50fbaa1c20bec4f6c4474e5594237640ad26ee7b10b5da1e921f303ba706a1",
+      "unet/diffusion_pytorch_model.bin": "ee23e3368e4e7c0e4ef636ed61923609c97fcaa583f8bb416e3e0986d4a0cfc6"
     },
-    "revision": null
+    "revision": "42bc0ee1726b141d49f519a6ea02ccfbf073db2e"
   },
   "stabilityai/sd-vae-ft-mse": {
     "files": {
-      "config.json": null,
-      "diffusion_pytorch_model.bin": null
+      "config.json": "92d3dfb746fca211a2c9e019e285f8597412211728dce3c5bcf4eda0f2d62e7e",
+      "diffusion_pytorch_model.bin": "1b4889b6b1d4ce7ae320a02dedaeff1780ad77d415ea0d744b476155c6377ddc"
     },
-    "revision": null
+    "revision": "31f26fdeee1355a5c34592e401dd41e45d25a493"
   }
 }

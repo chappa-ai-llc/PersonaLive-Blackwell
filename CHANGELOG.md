@@ -5,6 +5,11 @@ All notable changes to this fork. Format: [Keep a Changelog](https://keepachange
 
 ## [Unreleased]
 
+### Security
+- The model weights are pinned: `tools/weights.lock.json` records a Hugging Face commit and a SHA-256 for every file, so `tools/download_weights.py` now downloads them (#2).
+- The base model now comes from `lambda/sd-image-variations-diffusers`. The old `lambdalabs/` name was taken by an unrelated account and holds no weights; see SECURITY.md, "Model weights" (#7).
+- `download_weights.py --pin` reads large files' hashes from their Git LFS pointers instead of downloading them, and refuses a repo that is missing a listed file.
+
 ## [0.2.1] - 2026-11-09
 
 **Purpose:** documentation and release tooling only. Each release now states what it is for, has a release page, and

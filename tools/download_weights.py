@@ -27,9 +27,11 @@ SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 HASH_RE = re.compile(r"^[0-9a-f]{64}$")
 
 # Hugging Face repo -> (folder under pretrained_weights, files in the repo, and
-# the prefix to strip from a file's path when saving it).
+# the prefix to strip from a file's path when saving it). The base model comes
+# from Lambda's verified "lambda" org: the old "lambdalabs" name now belongs to
+# an unrelated account (SECURITY.md, "Model weights").
 SOURCES = {
-    "lambdalabs/sd-image-variations-diffusers": (
+    "lambda/sd-image-variations-diffusers": (
         "sd-image-variations-diffusers",
         ["unet/config.json", "unet/diffusion_pytorch_model.bin",
          "image_encoder/config.json", "image_encoder/pytorch_model.bin",
@@ -107,18 +109,36 @@ def download(lock: dict) -> int:
 
 
 def pin() -> int:
+    """Record each repo's current commit and the SHA-256 of every listed file.
+
+    Large files are stored in Git LFS, whose pointer carries the file's SHA-256,
+    so their hashes come from the Hub's metadata at that commit and nothing big
+    is downloaded. Small files are downloaded and hashed. A listed file missing
+    at the commit is refused: an upstream repo was emptied or replaced.
+    """
     from huggingface_hub import HfApi
 
     api = HfApi()
     lock = {}
     for repo, (_, files, _) in SOURCES.items():
         revision = api.model_info(repo).sha
+        info = api.model_info(repo, revision=revision, files_metadata=True)
+        siblings = {s.rfilename: s for s in info.siblings or []}
+        missing = [n for n in files if n not in siblings]
+        if missing:
+            print(f"{repo}@{revision}: REFUSED, missing {', '.join(missing)}. "
+                  "The upstream repo changed; check who owns it now.", file=sys.stderr)
+            return 1
         print(f"{repo}: pinning commit {revision}")
         hashes = {}
         for name in files:
-            tmp = fetch(repo, name, revision)
-            hashes[name] = sha256(tmp)
-            tmp.replace(target(repo, name))
+            lfs = siblings[name].lfs
+            if lfs:
+                hashes[name] = lfs.sha256
+            else:
+                tmp = fetch(repo, name, revision)
+                hashes[name] = sha256(tmp)
+                tmp.replace(target(repo, name))
         lock[repo] = {"revision": revision, "files": hashes}
     LOCK.write_text(json.dumps(lock, indent=2, sort_keys=True) + "\n")
     print(f"Wrote {LOCK}. Review the diff before committing it.")

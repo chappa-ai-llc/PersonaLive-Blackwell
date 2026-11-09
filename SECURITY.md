@@ -57,9 +57,12 @@ with the one on this page as published on GitHub, since a copy of the repository
 
 - `tools/download_weights.py` downloads each file from a fixed Hugging Face commit and checks its SHA-256 against
   `tools/weights.lock.json`. A file that does not match is deleted and refused.
-- **Open:** the pins in `tools/weights.lock.json` are not recorded yet, because the machine that prepared 0.1.0 could
-  not reach Hugging Face. Until they are, the script downloads nothing and says why. A maintainer records them with
+- The pins are recorded. `--pin` takes each large file's SHA-256 from its Git LFS pointer at the pinned commit, and
+  downloads and hashes the small ones. It refuses a repo that no longer has a listed file. A maintainer re-pins with
   `python tools/download_weights.py --pin` and reviews the diff before committing it.
+- The base model comes from `lambda/sd-image-variations-diffusers`, the repo Lambda moved to its verified `lambda`
+  organization. The old name, `lambdalabs/sd-image-variations-diffusers`, now belongs to an unrelated account created on
+  2026-10-07 and holds no weights. Do not download from it, and update any script that still names it.
 - Every checkpoint is loaded with `torch.load(..., weights_only=True)`, which refuses pickled code.
 
 ## Webcam server
