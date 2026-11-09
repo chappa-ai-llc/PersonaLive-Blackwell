@@ -17,6 +17,33 @@
       ],
       "verify": "After the resume I run `python tools/download_weights.py --pin`, and `tools/weights.lock.json` gets real hashes (#2 closes).",
       "blocks": "#2 weight pins, #3 TensorRT lock"
+    },
+    {
+      "id": "D-02",
+      "kind": "decision",
+      "filed": "2026-11-09",
+      "checked": "2026-11-09",
+      "urgency": "soon",
+      "blocking": "no",
+      "title": "Where should this project's internal notes live, now that the repo is public?",
+      "plain": "Two internal files sit in the public repo: the board's source (`build/board.json`) and the design document's agent chapters. Outside readers see notes about the office, pods and the forum that they cannot follow.",
+      "why": "You kept the repo public (D-01: keep it public) and flagged on 2026-11-09 that internal references confuse public readers. I have already cleaned the issues, `CHANGELOG.md`, `SECURITY.md` and `tools/lock.sh`. What is left is project management by nature: the board's cards, and MDD §3 and §11 (session checklist, handoffs, board link).",
+      "options": [
+        {
+          "key": "companion",
+          "text": "Move them to a new private repo, `chappa-ai-llc/PersonaLive-Blackwell-internal`: the board source, the agent chapters and the scratch notes. The public repo keeps the code, README, SECURITY, CHANGELOG and a public design document. Releases and signing stay on the public repo."
+        },
+        {
+          "key": "scrub",
+          "text": "Keep them in the public repo, but rewrite them so nothing names an internal system. Simpler, but every future card has to be written for strangers too."
+        },
+        {
+          "key": "leave",
+          "text": "Leave them as they are."
+        }
+      ],
+      "recommended": "companion",
+      "if_ignored": "They stay in the public repo as they are, and I keep new internal detail out of the public files."
     }
   ],
   "phases": [
@@ -587,7 +614,7 @@
       "end": "2026-11-22",
       "pct": 90,
       "status": "active",
-      "note": "v0.1.0 and v0.2.0 are tagged, signed by the office and pushed (office 0.170.0 fixed the signing route). Still to do: the GitHub release pages for both tags, #6."
+      "note": "v0.1.0 and v0.2.0 tagged and signed. 0.2.1 (purpose statements, signature check in SECURITY.md, tools/release.sh) merged; its tag waits for the release recipe that makes GitHub pages (forum c94e78a0), #6."
     },
     {
       "id": "P1",
