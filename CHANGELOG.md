@@ -7,8 +7,8 @@ All notable changes to this fork. Format: [Keep a Changelog](https://keepachange
 
 ## [0.2.1] - 2026-11-09
 
-**Purpose:** documentation only. Each release now states what it is for, and anyone can check that a release tag was
-signed by this project. No code or dependency changes.
+**Purpose:** documentation and release tooling only. Each release now states what it is for, has a release page, and
+anyone can check that its tag was signed by this project. No change to the software or its dependencies.
 
 **Config changes:** none.
 
@@ -17,11 +17,19 @@ signed by this project. No code or dependency changes.
 - `SECURITY.md`, "Verifying a release": the release key, its fingerprint, and how to check a tag with `git tag -v`.
 - `.release-signers`: the release key in Git's allowed-signers format.
 - `tools/release.sh`: runs the checks, then makes the signed tag with that version's notes as the tag message.
+- `deploy/release.sh` and `deploy/release_page.py`: make the GitHub release page for a tag from its `CHANGELOG.md`
+  section, with how to verify the signature, and add the missing pages for 0.1.0 and 0.2.0. Standard library only.
 
 ### Changed
 
 - `tools/lock.sh` takes `uv` from `PATH` or from `UV`, and stops with a clear message when neither is set.
 - The 0.1.0 and 0.2.0 notes below now open with a purpose statement.
+
+### Removed
+
+- The project-management files (the task board's data and the internal design document) are no longer kept in this
+  repository. They describe how the maintainers run the project, not how to use it; the README, `SECURITY.md` and
+  this changelog cover users.
 
 ## [0.2.0] - 2026-11-08
 

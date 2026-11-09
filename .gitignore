@@ -25,3 +25,8 @@ secrets/
 *.pem
 *.key
 uv.lock
+
+# Internal project notes: a separate private repo, cloned here
+internal/
+.build-board.json
+build/

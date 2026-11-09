@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the webcam page's vendored style files (webcam/static/style/).
 
-Two checks, both run before a release (MDD sections 8.3 and 9):
+Two checks, both run before a release (tools/release.sh runs the first):
 
 1. Integrity, standard library only: every file listed in vendor.json is
    present with its SHA-256, and no other file is in the folder. A hand edit
