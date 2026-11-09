@@ -5,6 +5,15 @@ All notable changes to this fork. Format: [Keep a Changelog](https://keepachange
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-09
+
+**Purpose:** security fix that also makes the weight download work. The base model's old Hugging Face name was taken
+over by an unrelated account, so the download now uses the model's real home. Every weight file is pinned to a fixed
+commit and SHA-256, and `tools/download_weights.py` downloads and checks them.
+
+**Config changes:** none. If you fetched weights by hand from `lambdalabs/sd-image-variations-diffusers`, delete them
+and run `python tools/download_weights.py`.
+
 ### Security
 - The model weights are pinned: `tools/weights.lock.json` records a Hugging Face commit and a SHA-256 for every file, so `tools/download_weights.py` now downloads them (#2).
 - The base model now comes from `lambda/sd-image-variations-diffusers`. The old `lambdalabs/` name was taken by an unrelated account and holds no weights; see SECURITY.md, "Model weights" (#7).
