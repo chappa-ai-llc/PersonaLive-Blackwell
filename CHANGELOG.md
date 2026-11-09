@@ -5,6 +5,14 @@ All notable changes to this fork. Format: [Keep a Changelog](https://keepachange
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-11-09
+
+**Purpose:** security fix for the TensorRT install. The lock now covers the real TensorRT wheels from NVIDIA's index,
+not the small installer package on PyPI that downloaded them unchecked by this project's lock.
+
+**Config changes:** none. Install as before: `pip install --require-hashes -r requirements.txt`. The file now names
+NVIDIA's index itself, so a mirror or proxy you use must also serve `https://pypi.nvidia.com/`.
+
 ### Security
 - TensorRT is locked to its real wheels. `tensorrt-cu13`, `tensorrt-cu13-libs` and `tensorrt-cu13-bindings` come from NVIDIA's index (`https://pypi.nvidia.com/`), so `requirements.txt` holds their SHA-256 instead of the PyPI installer stub's. `requirements.txt` now names both indexes (#3).
 
