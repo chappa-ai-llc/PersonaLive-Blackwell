@@ -38,7 +38,7 @@ from src.models.pose_guider import PoseGuider  # noqa: E402
 from src.models.unet_2d_condition import UNet2DConditionModel  # noqa: E402
 
 # The base model's UNet (Stable Diffusion 1.x layout, as in
-# lambdalabs/sd-image-variations-diffusers), one layer per block to save time.
+# lambda/sd-image-variations-diffusers), one layer per block to save time.
 UNET_CONFIG = {
     "act_fn": "silu",
     "attention_head_dim": 8,

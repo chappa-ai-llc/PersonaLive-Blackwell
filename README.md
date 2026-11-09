@@ -30,7 +30,7 @@ pip install --require-hashes -r requirements.txt
 python tools/download_weights.py
 ```
 
-It downloads each file from a fixed Hugging Face commit and checks its SHA-256 against `tools/weights.lock.json`. Until those pins are recorded (SECURITY.md, "Model weights"), it says so and downloads nothing.
+It downloads each file from a fixed Hugging Face commit and checks its SHA-256 against `tools/weights.lock.json`. A file that does not match is refused. The weights take about 15 GB.
 
 ### Launch
 
