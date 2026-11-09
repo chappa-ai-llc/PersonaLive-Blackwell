@@ -22,7 +22,7 @@ source .venv/bin/activate
 pip install --require-hashes -r requirements.txt
 ```
 
-`requirements.txt` pins every package to one version with its SHA-256 hashes, and pip refuses anything else. The TensorRT libraries arrive through NVIDIA's installer package, which downloads them from `pypi.nvidia.com` and checks them against that index's hashes (SECURITY.md, "Dependencies").
+`requirements.txt` pins every package to one version with its SHA-256 hashes, and pip refuses anything else. The TensorRT packages come from NVIDIA's index, `pypi.nvidia.com`, which the file names, and are locked to their real wheels (SECURITY.md, "Dependencies").
 
 ### Download the weights
 

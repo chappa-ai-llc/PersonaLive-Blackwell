@@ -31,6 +31,10 @@ dependencies = [
     "av",
     # TensorRT path (launcher.py, torch2trt.py, src/modeling/)
     "tensorrt-cu13>=10.14,<11",
+    # Named so [tool.uv.sources] takes them from NVIDIA's index; versions come
+    # from tensorrt-cu13.
+    "tensorrt-cu13-libs",
+    "tensorrt-cu13-bindings",
     "polygraphy",
     "onnx>=1.22.0",
     "onnx-graphsurgeon",
@@ -67,16 +71,16 @@ constraint-dependencies = [
     "urllib3>=2.8.0",
 ]
 
-# tensorrt-cu13 and tensorrt-cu13-libs ship on PyPI only as NVIDIA "wheel-stub"
-# placeholders: at install time they fetch the real wheel from
-# https://pypi.nvidia.com/ and check it against that index's SHA-256. Their
-# metadata is declared here so locking never runs the stub (SECURITY.md).
-[[tool.uv.dependency-metadata]]
-name = "tensorrt-cu13"
-version = "10.16.1.11"
-requires-dist = ["tensorrt-cu13-libs==10.16.1.11", "tensorrt-cu13-bindings==10.16.1.11"]
+# TensorRT comes from NVIDIA's index. On PyPI, tensorrt-cu13-libs is only a
+# "wheel-stub" that downloads the real wheel at install time, so the lock would
+# hash the stub. The NVIDIA index is explicit: only the packages named in
+# [tool.uv.sources] come from it, and requirements.txt locks the real wheels.
+[[tool.uv.index]]
+name = "nvidia"
+url = "https://pypi.nvidia.com"
+explicit = true
 
-[[tool.uv.dependency-metadata]]
-name = "tensorrt-cu13-libs"
-version = "10.16.1.11"
-requires-dist = []
+[tool.uv.sources]
+tensorrt-cu13 = { index = "nvidia" }
+tensorrt-cu13-libs = { index = "nvidia" }
+tensorrt-cu13-bindings = { index = "nvidia" }
